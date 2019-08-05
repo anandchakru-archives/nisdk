@@ -7,6 +7,8 @@ If you are creating your own angular based invites, you can include this directl
 ```sh
 npm i @nivite/nisdk
 
+# install dependencies
+npm i angularfire2 bootstrap file-saver firebase moment moment-timezone ngx-markdown
 ```
 
 ```js
@@ -59,20 +61,29 @@ The Wrapper around nlib, enables stand alone js webpages, react js applications,
 </head>
 <body>
   <!--...-->
-  <nlib-nivite></nlib-nivite>
+  <nelem-nivite></nelem-nivite>
   <script>
-    const elem = document.getElementsByTagName("nlib-nivite");
-    if (elem && elem.length) {
-      elem[0].setAttribute("firebase", "{ apiKey: 'GET_YOURS_AT_https://console.firebase.google.com', authDomain: 'REPLACEME', databaseURL: 'REPLACEME', projectId: 'REPLACEME', storageBucket: 'REPLACEME', messagingSenderId: 'REPLACEME', appId: 'REPLACEME' }");
-      elem[0].addEventListener("invite", (invite) => {
-          // called when invite loaded
-       }, false);
-      elem[0].addEventListener("login", (user) => { 
-          // called when user login/logout load
-       }, false);
-      elem[0].addEventListener("guest", (guest) => { 
-          // called when guest loaded
-       }, false);
+    const elemArray = document.getElementsByTagName("nelem-nivite");
+    if (elemArray && elemArray.length) {
+      const elem = elemArray[0];
+      elem.setAttribute("firebase", "{ apiKey: 'GET_YOURS_AT_https://console.firebase.google.com', authDomain: 'REPLACEME', databaseURL: 'REPLACEME', projectId: 'REPLACEME', storageBucket: 'REPLACEME', messagingSenderId: 'REPLACEME', appId: 'REPLACEME' }");
+      elem.addEventListener("login", (userevent) => {
+        if (userevent.detail) {
+          console.log('logged in as: ' + userevent.detail.displayName + ' - ' + userevent.detail.email);
+        } else {
+          console.log('logoff event');
+        }
+      }, false);
+      elem.addEventListener("invite", (inviteevent) => {
+        if (inviteevent.detail) {
+          console.log('invite: ' + JSON.stringify(inviteevent.detail));
+        }
+      }, false);
+      elem.addEventListener("guest", (guestevent) => {
+        if (guestevent.detail) {
+          console.log('guest event: ' + JSON.stringify(guestevent.detail));
+        }
+      }, false);
     }
   </script>
 </body>

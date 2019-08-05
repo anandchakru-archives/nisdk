@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output, Input } from '@angular/core';
 
 @Component({
   selector: 'nelem-root',
@@ -6,5 +6,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'nelem';
+  @Input() fireconfig: any;
+  @Output() invite = new EventEmitter<any>();
+  @Output() login = new EventEmitter<firebase.User>();
+  @Output() guest = new EventEmitter<any>();
 }

@@ -14,9 +14,9 @@
 
 <body>
   <!-- <nelem-root></nelem-root> -->
-  <nivite-sdk></nivite-sdk>
+  <nelem-nivite></nelem-nivite>
   <script>
-    const elem = document.getElementsByTagName("nivite-sdk")[0];
+    const elem = document.getElementsByTagName("nelem-nivite")[0];
     if (elem) {
       elem.setAttribute("firebase", "{ apiKey: 'GET_YOURS_AT_https://console.firebase.google.com', authDomain: 'REPLACEME', databaseURL: 'REPLACEME', projectId: 'REPLACEME', storageBucket: 'REPLACEME', messagingSenderId: 'REPLACEME', appId: 'REPLACEME' }");
       elem.addEventListener("login", (data) => { console.log('login event') }, false);
