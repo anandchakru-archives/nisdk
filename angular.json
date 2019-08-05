@@ -2,5 +2,294 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
-  "projects": {}
+  "projects": {
+    "ntest": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/ntest",
+      "sourceRoot": "projects/ntest/src",
+      "prefix": "ntest",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/ntest",
+            "index": "projects/ntest/src/index.html",
+            "main": "projects/ntest/src/main.ts",
+            "polyfills": "projects/ntest/src/polyfills.ts",
+            "tsConfig": "projects/ntest/tsconfig.app.json",
+            "aot": false,
+            "assets": [
+              "projects/ntest/src/favicon.ico",
+              "projects/ntest/src/assets"
+            ],
+            "styles": [
+              "projects/ntest/src/styles.scss"
+            ],
+            "scripts": [
+              {
+                "input": "node_modules/document-register-element/build/document-register-element.js"
+              }
+            ]
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/ntest/src/environments/environment.ts",
+                  "with": "projects/ntest/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "ntest:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "ntest:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "ntest:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ntest/src/test.ts",
+            "polyfills": "projects/ntest/src/polyfills.ts",
+            "tsConfig": "projects/ntest/tsconfig.spec.json",
+            "karmaConfig": "projects/ntest/karma.conf.js",
+            "assets": [
+              "projects/ntest/src/favicon.ico",
+              "projects/ntest/src/assets"
+            ],
+            "styles": [
+              "projects/ntest/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ntest/tsconfig.app.json",
+              "projects/ntest/tsconfig.spec.json",
+              "projects/ntest/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/ntest/e2e/protractor.conf.js",
+            "devServerTarget": "ntest:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "ntest:serve:production"
+            }
+          }
+        }
+      }
+    },
+    "nlib": {
+      "projectType": "library",
+      "root": "projects/nlib",
+      "sourceRoot": "projects/nlib/src",
+      "prefix": "nlib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/nlib/tsconfig.lib.json",
+            "project": "projects/nlib/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/nlib/src/test.ts",
+            "tsConfig": "projects/nlib/tsconfig.spec.json",
+            "karmaConfig": "projects/nlib/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/nlib/tsconfig.lib.json",
+              "projects/nlib/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "nelem": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/nelem",
+      "sourceRoot": "projects/nelem/src",
+      "prefix": "nelem",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/nelem",
+            "index": "projects/nelem/src/index.html",
+            "main": "projects/nelem/src/main.ts",
+            "polyfills": "projects/nelem/src/polyfills.ts",
+            "tsConfig": "projects/nelem/tsconfig.app.json",
+            "aot": false,
+            "assets": [
+              "projects/nelem/src/favicon.ico",
+              "projects/nelem/src/assets"
+            ],
+            "styles": [
+              "projects/nelem/src/styles.scss"
+            ],
+            "scripts": [
+              {
+                "input": "node_modules/document-register-element/build/document-register-element.js"
+              }
+            ]
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/nelem/src/environments/environment.ts",
+                  "with": "projects/nelem/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "none",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "nelem:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "nelem:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "nelem:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/nelem/src/test.ts",
+            "polyfills": "projects/nelem/src/polyfills.ts",
+            "tsConfig": "projects/nelem/tsconfig.spec.json",
+            "karmaConfig": "projects/nelem/karma.conf.js",
+            "assets": [
+              "projects/nelem/src/favicon.ico",
+              "projects/nelem/src/assets"
+            ],
+            "styles": [
+              "projects/nelem/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/nelem/tsconfig.app.json",
+              "projects/nelem/tsconfig.spec.json",
+              "projects/nelem/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/nelem/e2e/protractor.conf.js",
+            "devServerTarget": "nelem:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "nelem:serve:production"
+            }
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "ntest"
 }

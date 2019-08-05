@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Nelem</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script src="nivite-sdk-es2015.js"></script>
+  <script src="nivite-sdk-es5.js"></script>
+</head>
+
+<body>
+  <!-- <nelem-root></nelem-root> -->
+  <nivite-sdk></nivite-sdk>
+  <script>
+    const elem = document.getElementsByTagName("nivite-sdk")[0];
+    if (elem) {
+      elem.setAttribute("firebase", "{ apiKey: 'GET_YOURS_AT_https://console.firebase.google.com', authDomain: 'REPLACEME', databaseURL: 'REPLACEME', projectId: 'REPLACEME', storageBucket: 'REPLACEME', messagingSenderId: 'REPLACEME', appId: 'REPLACEME' }");
+      elem.addEventListener("login", (data) => { console.log('login event') }, false);
+      elem.addEventListener("invite", (data) => { console.log('invite event') }, false);
+      elem.addEventListener("guest", (data) => { console.log('guest event') }, false);
+    }
+  </script>
+</body>
+
+</html>

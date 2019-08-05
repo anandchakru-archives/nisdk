@@ -1,0 +1,264 @@
+<!--S:NAV-->
+<ng-container *ngIf="util.authLoaded">
+    <!-- header -->
+    <nav class="slidedown navbar navbar-expand-md navbar-dark bg-dark fixed-top mb-5"
+        [ngClass]="util.isHost()?'justify-content-between':''">
+        <a class="navbar-brand" href="//nivite.jrvite.com" (click)="util.toggleNav(); true" target="_blank"
+            rel="noopener noreferrer">Nivite
+        </a>
+        <button class="navbar-toggler" type="button" (click)="util.toggleNav()" aria-label="Toggle navigation" #toggler>
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse" [class.collapse]="util.collapsed">
+            <div class="navbar-nav mr-auto">
+                <a class="nav-item nav-link" href="https://nivite.jrvite.com/ws/editor" (click)="util.toggleNav(); true"
+                    target="_blank" rel="noopener noreferrer">New invite</a>
+            </div>
+            <div class="navbar-nav mr-auto" *ngIf="util.user">
+                <a class="nav-item nav-link" href="https://nivite.jrvite.com/ws/invites/list"
+                    (click)="util.toggleNav(); true" target="_blank" rel="noopener noreferrer">My invites</a>
+            </div>
+            <div class="navbar-nav">
+                <ng-container *ngIf="util.user; else noauth">
+                    <a class="nav-item nav-link">
+                        <span>{{util.user?.email}}</span>
+                    </a>
+                    <a class="nav-item nav-link pointer" (click)="util.toggleNav(); util.logout(); false;">Logout</a>
+                </ng-container>
+                <ng-template #noauth>
+                    <a class="nav-item nav-link pointer" (click)="util.toggleNav(); loginPop()">
+                        <span>Login</span>
+                    </a>
+                </ng-template>
+            </div>
+        </div>
+    </nav>
+    <!-- footer -->
+    <nav class="slideup navbar fixed-bottom navbar-light bg-light justify-content-between">
+        <div class="btn-group">
+            <a class="nav-item nav-link btn btn-sm btn-primary pointer text-dark"
+                (click)="util.toggleNav(); util.showModal('rsvp'); false;"> RSVP
+                <span class="sr-only">RSVP</span>
+            </a>
+            <a class="nav-item nav-link btn btn-sm btn-primary pointer text-dark" (click)="util.showModal('atc')">
+                Calendar
+                <span class="sr-only">Add to calendar</span>
+            </a>
+            <a *ngIf="util.invite?.addrUrl" class="nav-item nav-link btn btn-sm btn-primary pointer text-dark"
+                href="{{util.invite?.addrUrl}}" target="_blank" rel="noopener noreferrer"> Map <span
+                    class="sr-only">Navigate</span>
+            </a>
+        </div>
+        <div class="btn-group">
+            <a (click)="clog.toggle(); false;" class="small pointer"
+                [ngClass]="clog.visible?'text-primary':'text-muted'">
+                {{buildinfo?buildinfo.tag:'{}'}}
+            </a>
+        </div>
+    </nav>
+</ng-container>
+<ng-template #loading>
+    loading.
+</ng-template>
+<!--E:NAV-->
+
+
+
+
+
+
+
+
+
+<!--S:RSVP-->
+<div class="modal fade" #rsvpModal role="dialog" aria-labelledby="niviteRsvpModalTitle" (click)="hideRsvpModal($event)">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="niviteRsvpModalTitle">
+                    <ng-container *ngIf="getRsvp(); else respond">
+                        Your response
+                    </ng-container>
+                    <ng-template #respond>
+                        Respond
+                    </ng-template>
+                    <strong
+                        [ngClass]="isYOrNOrM('Y')?'text-success':isYOrNOrM('N')?'text-danger':isYOrNOrM('M')?'text-warning':''">
+                        {{getRsvp()}} {{getUnApproved()}} </strong>
+                </h5>
+                <button type="button" class="close" (click)="hideRsvpModal()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="fg" *ngIf="fg">
+                    <div class="row">
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label for="niviteRsvpModalFormAdultCount">Adults</label>
+                                <input type="number" class="form-control" id="niviteRsvpModalFormAdultCount"
+                                    formControlName="ac" aria-describedby="Number of adults">
+                                <small class="form-text text-muted">Number of adults</small>
+                            </div>
+                        </div>
+                        <div class="col-sm">
+                            <div class="form-group">
+                                <label for="niviteRsvpModalFormKidCount">Kids</label>
+                                <input type="number" class="form-control" id="niviteRsvpModalFormKidCount"
+                                    formControlName="kc" aria-describedby="Number of kids">
+                                <small class="form-text text-muted">Number of kids (~12 years or younger)</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="niviteRsvpModalFormLongMsg">Message</label>
+                        <textarea type="number" class="form-control" id="niviteRsvpModalFormLongMsg"
+                            formControlName="longMsg" aria-describedby="Optional message to the host"
+                            rows="3"></textarea>
+                        <small class="form-text text-muted">Optional message to the host. Markdown enabled. <a
+                                href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank"
+                                rel="noopener noreferrer">help</a></small>
+                    </div>
+                    <div class="btn-group d-flex">
+                        <button type="button" class="btn btn-success" (click)="saveRsvp('Y')" [disabled]="savingrsvp">
+                            <span>Yes</span>
+                        </button>
+                        <button type="button" class="btn btn-warning" (click)="saveRsvp('M')" [disabled]="savingrsvp">
+                            <span>Maybe</span>
+                        </button>
+                        <button type="button" class="btn btn-danger" (click)="saveRsvp('N')" [disabled]="savingrsvp">
+                            <span>No</span>
+                        </button>
+                    </div>
+                    <small *ngIf="getUnApproved()" class="form-text text-muted">* Host has not accepted.</small>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="resetRsvpForm()">Reset</button>
+                <button type="button" class="btn btn-secondary bg-white text-dark"
+                    (click)="hideRsvpModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--E:RSVP-->
+
+
+
+
+
+
+
+
+
+
+
+<!--S:ATC-->
+<div class="modal fade" #atcModal tabindex="-1" role="dialog" aria-labelledby="niviteCalendarModalTitle"
+    (click)="hideAtcModal($event)" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="niviteCalendarModalTitle">Select Calendar</h5>
+                <button type="button" class="close" (click)="hideAtcModal()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <button class="btn text-white w-100 bg-apple" (click)="hideAtcModal(); atc.apple()">
+                            <span>Apple</span>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <button class="btn text-white w-100 bg-google" (click)="hideAtcModal(); atc.google()">
+                            <span>Google</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col">
+                        <button class="btn text-white w-100 bg-microsoft" (click)="hideAtcModal(); atc.microsoft()">
+                            <span>Microsoft</span>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <button class="btn text-white w-100 bg-yahoo" (click)="hideAtcModal(); atc.yahoo()">
+                            <span>Yahoo</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary bg-white text-dark"
+                    (click)="hideAtcModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--E:ATC-->
+
+
+
+
+
+
+
+
+
+
+
+<!--S:CLOG-->
+<div class="clog pb-5 p-1 border shadow-sm fixed-bottom bg-light" *ngIf="clog.visible">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom mb-1 lh-1 justify-content-between">
+        <span class="navbar-brand">Logs</span>
+        <form class="form-inline">
+            <button type="button" class="btn btn-sm px-1 mx-1 btn-outline-dark" (click)="clog.clear()"
+                [disabled]="clog.count===0"><span class="pl-1">clear</span>
+            </button>
+            <button type="button" class="btn btn-sm px-1 mx-1 btn-outline-primary"
+                (click)="clog.copy(clog.lines.join('\n'))" [disabled]="clog.count===0"><span class="pl-1">copy</span>
+            </button>
+            <button type="button" class="btn btn-sm px-1 mx-1 btn-outline-danger" (click)="clog.hide()"><span
+                    class="pl-1">close</span>
+            </button>
+        </form>
+    </nav>
+    <div class="small lh-1 text-monospace" style="max-height: 100%; overflow-y: auto;">
+        <ul class="list-group" class="text-monospace pl-0 list-group-flush">
+            <li class="list-group-item p-0 border-0 mb-1" *ngFor="let line of clog.lines">
+                {{line}}
+            </li>
+        </ul>
+    </div>
+</div>
+<!--E:CLOG-->
+
+
+
+
+
+
+
+
+
+
+
+<!--S:GROWL-->
+<div class="growls" *ngIf="growls && ids()?.length">
+    <div *ngFor="let growl of growls | keyvalue: descOrder">
+        <div class="px-0 pt-1 pb-0 alert fade show alert-dismissible alert-{{growl.value.type}} border border-{{growl.value.type}}"
+            role="alert">
+            <button type="button" class="close mx-1 p-1 text-muted" (click)="close(growl.key)">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="p-1 text-dark font-weight-bold mr-4">{{growl.value.title}} </div>
+            <div class="px-1 small text-dark" *ngIf="growl.value.body">{{growl.value.body}}</div>
+            <div class="my-2 progress" *ngIf="growl.value.percent">
+                <div class="progress-bar bg-{{growl.value.type}}" [style.width.%]="growl.value.percent"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--E:GROWL-->

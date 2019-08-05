@@ -1,27 +1,120 @@
 # Nisdk
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.2.0.
+## nlib
+The Core library, built using angular 8. This can be used to interact with invites created on [Nivite.com](https://nivite.jrvite.com).
+If you are creating your own angular based invites, you can include this directly by doing
 
-## Development server
+```sh
+npm i @nivite/nisdk
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+```
 
-## Code scaffolding
+```js
+// app.module.ts
+import { NlibModule } from 'nlib';
+@NgModule({
+  declarations: [
+    AppComponent, ...
+  ],
+  imports: [
+    NlibModule, ...
+  ],
+  providers: [...],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```html
+<!-- app.component.html -->
+<nlib-nivite [fireconfig]="fireconfig" (invite)="loadInviteData($event)" (login)="loadUserData($event)" (guest)="loadGuestData($event)"></nlib-nivite>
+```
 
-## Build
+```js
+// app.component.ts
+  fireconfig = { apiKey: 'GET_YOURS_AT_https://console.firebase.google.com', authDomain: 'REPLACEME', databaseURL: 'REPLACEME', projectId: 'REPLACEME', storageBucket: 'REPLACEME', messagingSenderId: 'REPLACEME', appId: 'REPLACEME' };
+  invite: any;
+  guest: any;
+  constructor() { }
+  loadInviteData(invite: any) {
+    // called when invite loaded
+    this.invite = invite;
+  }
+  loadUserData(user: any) {
+    // called when user login/logout load
+  }
+  loadGuestData(guest: any) {
+    // called when guest loaded
+    this.guest = guest;
+  }
+```
+## nelem
+The Wrapper around nlib, enables stand alone js webpages, react js applications, vue js applications, to interact with invites created on [Nivite.com](https://nivite.jrvite.com). Include the js and do the following to get started
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+```html
+<!--index.html-->
+<head>
+    <!--...-->
+    <script src="nivite-sdk-es2015.js"></script>
+</head>
+<body>
+  <!--...-->
+  <nlib-nivite></nlib-nivite>
+  <script>
+    const elem = document.getElementsByTagName("nlib-nivite");
+    if (elem && elem.length) {
+      elem[0].setAttribute("firebase", "{ apiKey: 'GET_YOURS_AT_https://console.firebase.google.com', authDomain: 'REPLACEME', databaseURL: 'REPLACEME', projectId: 'REPLACEME', storageBucket: 'REPLACEME', messagingSenderId: 'REPLACEME', appId: 'REPLACEME' }");
+      elem[0].addEventListener("invite", (invite) => {
+          // called when invite loaded
+       }, false);
+      elem[0].addEventListener("login", (user) => { 
+          // called when user login/logout load
+       }, false);
+      elem[0].addEventListener("guest", (guest) => { 
+          // called when guest loaded
+       }, false);
+    }
+  </script>
+</body>
+```
 
-## Running unit tests
+## ntest
+Used only to test nlib. Not exported to [@nivite/nisdk](https://www.npmjs.com/package/@nivite/nisdk)
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+#### Local setup
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+```sh
+#build library with watch flag
+npm run start:lib
 
-## Further help
+#build app
+npm run start:app
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+#### Publish
+```sh
+./config/all.sh "commit message"
+
+```
+
+#### @angular/cli reference
+
+```sh
+ng new nisdk --style scss --prefix nivite --routing=false --create-application=false
+
+npm i angularfire2 bootstrap file-saver firebase moment moment-timezone ngx-markdown
+npm i -D fs-extra concat
+
+ng g application ntest --style scss --prefix ntest --routing=false
+ng g library nlib --prefix nlib
+ng g application nelem --style scss --prefix nelem --routing=false
+ng add @angular/elements --project=nelem
+# ng add angular-cli-ghpages --project=nelem
+
+# nlib services
+ng g service services/util --project=nlib
+ng g service services/clog --project=nlib
+ng g service services/atc --project=nlib
+
+```

@@ -1,36 +1,56 @@
 {
-  "name": "nisdk",
-  "version": "0.0.0",
+  "name": "@nivite/nisdk",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "buildinfo": "node ./config/buildinfo.js",
+    "start:app": "npm run buildinfo && ng serve ntest --port 4500",
+    "start:lib": "npm run buildinfo && ng build nlib --watch",
+    "build:lib": "npm run buildinfo && ng build nlib",
+    "package:lib": "npm run build:lib && (cd dist/nlib; npm pack)",
+    "publish:lib": "npm run package:lib && npm publish dist/nlib/nlib-${npm_package_version}.tgz",
+    "build:elem": "npm run build:lib && ng build nelem --prod && node ./config/merge.js"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "@angular/animations": "~8.2.0",
     "@angular/common": "~8.2.0",
     "@angular/compiler": "~8.2.0",
     "@angular/core": "~8.2.0",
+    "@angular/elements": "^8.2.0",
     "@angular/forms": "~8.2.0",
     "@angular/platform-browser": "~8.2.0",
     "@angular/platform-browser-dynamic": "~8.2.0",
     "@angular/router": "~8.2.0",
+    "angularfire2": "^5.2.1",
+    "bootstrap": "^4.3.1",
+    "file-saver": "^2.0.2",
+    "firebase": "^6.3.4",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.26",
+    "ngx-markdown": "^8.1.0",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
-    "zone.js": "~0.9.1"
+    "zone.js": "~0.9.1",
+    "document-register-element": "^1.7.2"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "~0.802.0",
+    "@angular-devkit/build-ng-packagr": "~0.802.0",
     "@angular/cli": "~8.2.0",
     "@angular/compiler-cli": "~8.2.0",
     "@angular/language-service": "~8.2.0",
-    "@types/node": "~8.9.4",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
+    "@types/node": "~8.9.4",
     "codelyzer": "^5.0.0",
+    "concat": "^1.0.3",
+    "fs-extra": "^8.1.0",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.1.0",
@@ -38,9 +58,40 @@
     "karma-coverage-istanbul-reporter": "~2.0.1",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.0",
+    "ng-packagr": "^5.3.0",
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
+    "tsickle": "^0.36.0",
     "tslint": "~5.15.0",
     "typescript": "~3.5.3"
+  },
+  "description": "Create your own online invitations, the nerdy way.",
+  "keywords": [
+    "invite",
+    "rsvp",
+    "wedding",
+    "birthday",
+    "graduation",
+    "festival",
+    "diy",
+    "party",
+    "gettogether",
+    "potluck",
+    "celebration",
+    "picnic",
+    "invitation"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nivite/nisdk"
+  },
+  "homepage": "https://nivite.jrvite.com",
+  "author": "Anand Rockzz",
+  "bugs": {
+    "url": "https://github.com/nivite/nisdk/issues"
   }
 }
