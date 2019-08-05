@@ -56,8 +56,12 @@ The Wrapper around nlib, enables stand alone js webpages, react js applications,
 ```html
 <!--index.html-->
 <head>
-    <!--...-->
-    <script src="nivite-sdk-es2015.js"></script>
+  <!--...-->
+  <script src="https://github.com/nivite/nisdk/releases/latest/download/nivite-sdk-es2015.js"></script>
+  <!-- 
+    Above url (latest) recommended, but if you want to be on a specific version, you do so
+    <script src="https://github.com/nivite/nisdk/releases/download/v1.0.1/nivite-sdk-es2015.js"></script>
+  -->
 </head>
 <body>
   <!--...-->
