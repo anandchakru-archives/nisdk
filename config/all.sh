@@ -14,10 +14,11 @@ npm run buildinfo
 git status 
 git add --all 
 git status 
-git commit --message "$commitMsg" 
+git commit --message "$commitMsg"
+newTag=$(git describe --exact-match $(git rev-list --tags --date-order --max-count=1) --tags)
 npm run build:elem
 npm run publish:lib 
 git push 
 git push --tags
-./config/publish.sh filename=./dist/nelem/nivite-sdk-es5.js
-./config/publish.sh filename=./dist/nelem/nivite-sdk-es2015.js
+./config/publish.sh filename=./dist/nelem/nivite-sdk-es5.js tag="$newTag"
+./config/publish.sh filename=./dist/nelem/nivite-sdk-es2015.js tag="$newTag"
