@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 #
-# Author: Stefan Buck
-# License: MIT
-# Modified from https://gist.github.com/stefanbuck/ce788fee19ab6eb0b4447a85fc99f447
-#
+# Reference https://gist.github.com/stefanbuck/ce788fee19ab6eb0b4447a85fc99f447
+# Reference https://stackoverflow.com/a/57369772/234110
 #
 # This script accepts the following parameters:
 #
