@@ -11,10 +11,10 @@
     "buildinfo": "node ./config/buildinfo.js",
     "start:app": "npm run buildinfo && ng serve ntest --port 4500",
     "start:lib": "npm run buildinfo && ng build nlib --watch",
-    "build:lib": "npm run buildinfo && ng build nlib",
+    "build:lib": "ng build nlib",
     "build:elem": "npm run build:lib && ng build nelem --prod && node ./config/merge.js",
     "publish:elem": "npm run ./config/publish.js",
-    "publish:lib": "node ./config/rename.js && (cd dist/nlib; npm pack) && npm publish dist/nlib/nivite-nisdk-${npm_package_version}.tgz"
+    "publish:lib": "node ./config/rename.js && (cd dist/nlib; npm pack) && npm publish dist/nlib/nivite-nlib-${npm_package_version}.tgz"
   },
   "private": false,
   "dependencies": {
