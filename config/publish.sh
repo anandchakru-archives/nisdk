@@ -20,6 +20,20 @@
 
 urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
 
+generate_post_data()
+{
+  cat <<EOF
+{
+  "tag_name": "$tag",
+  "target_commitish": "master",
+  "name": "$tag",
+  "body": "$tag",
+  "draft": false,
+  "prerelease": false
+}
+EOF
+}
+
 set -e
 xargs=$(which gxargs || which xargs)
 
@@ -35,7 +49,6 @@ done
 # Define variables.
 owner=nivite
 repo=nisdk
-tag=LATEST
 GH_API="https://api.github.com"
 GH_REPO="$GH_API/repos/$owner/$repo"
 GH_TAGS="$GH_REPO/releases/tags/$tag"
@@ -46,15 +59,18 @@ password=`grep -oP "(?<=https:\/\/$username:)(.*)(?=@github.com)" ~/.git-credent
 password=$(urldecode "$password")
 AUTH="$username:$password"
 
-if [[ "$tag" == 'LATEST' ]]; then
-  GH_TAGS="$GH_REPO/releases/latest"
-fi
-
 # Validate token.
 curl -o /dev/null -s --user "$AUTH" $GH_REPO || { echo "Error: Invalid repo, token or network issue!";  exit 1; }
 
-# Read asset tags.
-response=$(curl -s --user "$AUTH" $GH_TAGS)
+if [[ "$tag" == 'LATEST' ]]; then
+    GH_TAGS="$GH_REPO/releases/latest"
+    # Read asset tags.
+    response=$(curl -s --user "$AUTH" $GH_TAGS)
+  else
+    # create a new release
+    # postData="{\"tag_name\":\"$tag\", \"name\":\"$tag\", \"draft\":\"false\"}"
+    response=$(curl --user "$AUTH" -i -d "$(generate_post_data)" -H "Content-Type: application/json" -X POST "$GH_REPO/releases")
+fi
 
 # Get ID of the release
 eval $(echo "$response" | grep -m 1 "id.:" | grep -w id | tr : = | tr -cd '[[:alnum:]]=')

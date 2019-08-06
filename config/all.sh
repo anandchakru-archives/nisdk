@@ -21,4 +21,4 @@ npm run publish:lib
 git push 
 git push --tags
 ./config/publish.sh filename=./dist/nelem/nivite-sdk-es5.js tag="$newTag"
-./config/publish.sh filename=./dist/nelem/nivite-sdk-es2015.js tag="$newTag"
+./config/publish.sh filename=./dist/nelem/nivite-sdk-es2015.js tag="LATEST"
