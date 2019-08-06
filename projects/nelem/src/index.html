@@ -9,19 +9,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <script src="nivite-sdk-es2015.js"></script>
-  <script src="nivite-sdk-es5.js"></script>
 </head>
 
 <body>
   <!-- <nelem-root></nelem-root> -->
   <nelem-nivite></nelem-nivite>
   <script>
-    const elem = document.getElementsByTagName("nelem-nivite")[0];
-    if (elem) {
+    const elemArray = document.getElementsByTagName("nelem-nivite");
+    if (elemArray && elemArray.length) {
+      const elem = elemArray[0];
       elem.setAttribute("firebase", "{ apiKey: 'GET_YOURS_AT_https://console.firebase.google.com', authDomain: 'REPLACEME', databaseURL: 'REPLACEME', projectId: 'REPLACEME', storageBucket: 'REPLACEME', messagingSenderId: 'REPLACEME', appId: 'REPLACEME' }");
-      elem.addEventListener("login", (data) => { console.log('login event') }, false);
-      elem.addEventListener("invite", (data) => { console.log('invite event') }, false);
-      elem.addEventListener("guest", (data) => { console.log('guest event') }, false);
+      elem.addEventListener("login", (userevent) => {
+        if (userevent.detail) {
+          console.log('logged in as: ' + userevent.detail.displayName + ' - ' + userevent.detail.email);
+        } else {
+          console.log('logoff event');
+        }
+      }, false);
+      elem.addEventListener("invite", (inviteevent) => {
+        if (inviteevent.detail) {
+          console.log('invite: ' + JSON.stringify(inviteevent.detail));
+        }
+      }, false);
+      elem.addEventListener("guest", (guestevent) => {
+        if (guestevent.detail) {
+          console.log('guest event: ' + JSON.stringify(guestevent.detail));
+        }
+      }, false);
     }
   </script>
 </body>

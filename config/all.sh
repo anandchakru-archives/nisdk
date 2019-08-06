@@ -8,4 +8,16 @@ if [ -z "$1" ]; then
   commitMsg="$1"
 fi
 
-npm version patch && (cd ./projects/nlib; npm version patch) && npm run buildinfo && git status && git add --all && git status && git commit --message "$commitMsg" && npm run publish:lib && git push && git push --tags
+npm version patch
+(cd ./projects/nlib; npm version patch)
+npm run buildinfo 
+git status 
+git add --all 
+git status 
+git commit --message "$commitMsg" 
+npm run build:elem
+npm run publish:lib 
+git push 
+git push --tags
+./config/publish.sh filename=./dist/nelem/nivite-sdk-es5.js
+./config/publish.sh filename=./dist/nelem/nivite-sdk-es2015.js

@@ -12,9 +12,9 @@
     "start:app": "npm run buildinfo && ng serve ntest --port 4500",
     "start:lib": "npm run buildinfo && ng build nlib --watch",
     "build:lib": "npm run buildinfo && ng build nlib",
-    "package:lib": "npm run build:lib && (cd dist/nlib; npm pack)",
-    "publish:lib": "npm run package:lib && npm publish dist/nlib/nivite-nisdk-${npm_package_version}.tgz",
-    "build:elem": "npm run build:lib && ng build nelem --prod && node ./config/merge.js"
+    "build:elem": "npm run build:lib && ng build nelem --prod && node ./config/merge.js",
+    "publish:elem": "npm run ./config/publish.js",
+    "publish:lib": "node ./config/rename.js && (cd dist/nlib; npm pack) && npm publish dist/nlib/nivite-nisdk-${npm_package_version}.tgz"
   },
   "private": false,
   "dependencies": {
@@ -45,6 +45,7 @@
     "@angular/cli": "~8.2.0",
     "@angular/compiler-cli": "~8.2.0",
     "@angular/language-service": "~8.2.0",
+    "@octokit/rest": "^16.28.7",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
@@ -60,6 +61,7 @@
     "karma-jasmine-html-reporter": "^1.4.0",
     "ng-packagr": "^5.3.0",
     "protractor": "~5.4.0",
+    "replace-in-file": "^4.1.2",
     "ts-node": "~7.0.0",
     "tsickle": "^0.36.0",
     "tslint": "~5.15.0",

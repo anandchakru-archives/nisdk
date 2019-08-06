@@ -1,5 +1,5 @@
 {
-  "name": "@nivite/nisdk",
+  "name": "nlib",
   "version": "1.0.3",
   "publishConfig": {
     "access": "public"

@@ -119,7 +119,7 @@ npm run start:app
 ng new nisdk --style scss --prefix nivite --routing=false --create-application=false
 
 npm i angularfire2 bootstrap file-saver firebase moment moment-timezone ngx-markdown
-npm i -D fs-extra concat
+npm i -D fs-extra concat replace-in-file
 
 ng g application ntest --style scss --prefix ntest --routing=false
 ng g library nlib --prefix nlib
