@@ -29,12 +29,12 @@ export class AppModule { }
 
 ```html
 <!-- app.component.html -->
-<nlib-nivite [fireconfig]="fireconfig" (invite)="loadInviteData($event)" (login)="loadUserData($event)" (guest)="loadGuestData($event)"></nlib-nivite>
+<nlib-nivite [firewebconfig]="fireconf" (invite)="loadInviteData($event)" (login)="loadUserData($event)" (guest)="loadGuestData($event)"></nlib-nivite>
 ```
 
 ```js
 // app.component.ts
-  fireconfig = { apiKey: 'GET_YOURS_AT_https://console.firebase.google.com', authDomain: 'REPLACEME', databaseURL: 'REPLACEME', projectId: 'REPLACEME', storageBucket: 'REPLACEME', messagingSenderId: 'REPLACEME', appId: 'REPLACEME' };
+  fireconf = { apiKey: 'GET_YOURS_AT_https://console.firebase.google.com', authDomain: 'REPLACEME', databaseURL: 'REPLACEME', projectId: 'REPLACEME', storageBucket: 'REPLACEME', messagingSenderId: 'REPLACEME', appId: 'REPLACEME' };
   invite: any;
   guest: any;
   constructor() { }

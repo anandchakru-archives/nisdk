@@ -8,7 +8,7 @@ import { ClogService } from 'nlib';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  fireconfig = environment.firebase;
+  fireconf = environment.firebase;
   invite: any;
   guest: any;
   constructor(private clog: ClogService) { }

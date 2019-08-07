@@ -1,9 +1,6 @@
 {
   "name": "nlib",
   "version": "1.0.7",
-  "publishConfig": {
-    "access": "public"
-  },
   "dependencies": {},
   "peerDependencies": {
     "@angular/common": "^8.0.3",
@@ -24,5 +21,34 @@
     "@types/gapi.client": "^1.0.1",
     "@types/jquery": "^3.3.30",
     "@types/moment-timezone": "^0.5.12"
+  },
+  "description": "Create your own online invitations, the nerdy way.",
+  "keywords": [
+    "invite",
+    "rsvp",
+    "wedding",
+    "birthday",
+    "graduation",
+    "festival",
+    "diy",
+    "party",
+    "gettogether",
+    "potluck",
+    "celebration",
+    "picnic",
+    "invitation"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nivite/nisdk"
+  },
+  "homepage": "https://nivite.jrvite.com",
+  "author": "RockzzA",
+  "bugs": {
+    "url": "https://github.com/nivite/nisdk/issues"
   }
 }

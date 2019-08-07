@@ -17,7 +17,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 })
 export class NlibComponent implements OnInit, OnDestroy {
   private uns = new Subject();
-  @Input() fireconfig: any  /* gapi.client.firebase.WebAppConfig */;
+  @Input() firewebconfig: any  /* gapi.client.firebase.WebAppConfig */;
   @Output() invite = new EventEmitter<Invite>();
   @Output() login = new EventEmitter<firebase.User>();
   @Output() guest = new EventEmitter<Guest>();
@@ -65,7 +65,7 @@ export class NlibComponent implements OnInit, OnDestroy {
     });
     title.setTitle('Nivite - Loading');
     this.util.userSub.pipe(take(1)).subscribe((user: firebase.User) => {  // One time - invitalize firestore config
-      this.util.initializeFirestoreAndSetupInvite(this.fireconfig);
+      this.util.initializeFirestoreAndSetupInvite(this.firewebconfig);
     });
     this.util.guestSub.pipe(takeUntil(this.uns)).subscribe((guest: Guest) => { // On everytime guest is loaded
       this.guest.emit(guest);
