@@ -2,7 +2,22 @@
 
 ## nlib
 The Core library, built using angular 8. This can be used to interact with invites created on [Nivite.com](https://nivite.jrvite.com).
-If you are creating your own angular based invites, you can include this directly by doing
+If you are creating your own angular based invites, you can include this directly by doing. 
+#### Samples:
+
+[dummy](https://nivite-nlib-demo1.stackblitz.io/) 
+
+[Live]() TBD
+
+[angular]() TBD
+
+[react]() TBD
+
+[vue]() TBD
+
+[plainjs]() TBD
+
+
 
 ```sh
 npm i @nivite/nisdk
