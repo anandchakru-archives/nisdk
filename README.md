@@ -127,7 +127,7 @@ npm run start:app
 ./config/all.sh "commit message"
 
 ```
-
+<!-- 
 #### @angular/cli reference
 
 ```sh
@@ -147,4 +147,7 @@ ng g service services/util --project=nlib
 ng g service services/clog --project=nlib
 ng g service services/atc --project=nlib
 
+#rename nlib to @nivite/nlib in ./projects/nlib/package.json
+
 ```
+-->
