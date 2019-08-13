@@ -68,6 +68,10 @@ export class UtilService {
     this.clog.visible = url.get('log') ? true : false;         // log - initialize custom console
   }
   initializeFirestoreAndSetupInvite(hostFirestoreWebConfig: any/* gapi.client.firebase.WebAppConfig */) {
+    if (!hostFirestoreWebConfig || !hostFirestoreWebConfig.appId) {
+      console.log('Invalid fireconfig, trying window.fireconfig');
+      hostFirestoreWebConfig = (window as any).fireconfig;
+    }
     if (hostFirestoreWebConfig && hostFirestoreWebConfig.appId) {
       this.customerFirestore = new AngularFirestore(
         hostFirestoreWebConfig, hostFirestoreWebConfig.appId, false, null, PLATFORM_ID, this.ngZone, null);
