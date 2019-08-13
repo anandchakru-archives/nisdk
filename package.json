@@ -14,7 +14,7 @@
     "build:lib": "ng build nlib",
     "build:elem": "npm run build:lib && ng build nelem --prod && node ./config/merge.js",
     "publish:elem": "npm run ./config/publish.js",
-    "publish:lib": "node ./config/rename.js && (cd dist/nlib; npm pack) && npm publish dist/nlib/nivite-nlib-${npm_package_version}.tgz"
+    "publish:lib": "(cd dist/nlib; npm pack) && npm publish dist/nlib/nivite-nlib-${npm_package_version}.tgz"
   },
   "private": false,
   "dependencies": {
@@ -61,7 +61,6 @@
     "karma-jasmine-html-reporter": "^1.4.0",
     "ng-packagr": "^5.3.0",
     "protractor": "~5.4.0",
-    "replace-in-file": "^4.1.2",
     "ts-node": "~7.0.0",
     "tsickle": "^0.36.0",
     "tslint": "~5.15.0",
