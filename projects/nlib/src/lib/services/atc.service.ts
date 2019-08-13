@@ -14,7 +14,7 @@ export class AtcService {
   readonly FORMAT = 'YYYYMMDD[T]HHmmss';
   readonly APPLE_SEPARATOR = '\r\n';
   readonly APPLE_START =
-    'BEGIN:VCALENDAR' + this.APPLE_SEPARATOR + 'PRODID:nivite.com' + this.APPLE_SEPARATOR + 'VERSION:2.0' + this.APPLE_SEPARATOR;
+    'BEGIN:VCALENDAR' + this.APPLE_SEPARATOR + 'PRODID:nivite.jrvite.com' + this.APPLE_SEPARATOR + 'VERSION:2.0' + this.APPLE_SEPARATOR;
   readonly APPLE_END = this.APPLE_SEPARATOR + 'END:VCALENDAR';
 
   constructor(private util: UtilService) { }
