@@ -79,6 +79,7 @@ export class UtilService {
         hostFirestoreWebConfig, hostFirestoreWebConfig.appId, hostFirestoreWebConfig.storageBucket, PLATFORM_ID, this.ngZone); */
       this.validateAndSetupInvite();
     } else {
+      console.log('Invalid window.fireconfig, trying assets/fireconfig.json');
       this.http.get('assets/fireconfig.json').subscribe((config: any) => {
         if (config && config.appId) {
           this.customerFirestore = new AngularFirestore(config, config.appId, false, null, PLATFORM_ID, this.ngZone, null);
