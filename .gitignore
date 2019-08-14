@@ -44,3 +44,6 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+# ignore them, since it will be built every time
+projects/nlib/src/lib/buildinfo.ts
+projects/ntest/src/app/buildinfo.ts

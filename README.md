@@ -1,5 +1,6 @@
-# Nisdk
+[Nivite.com](https://nivite.jrvite.com)
 
+<!-- 
 ## nlib
 The Core library, built using angular 8. This can be used to interact with invites created on [Nivite.com](https://nivite.jrvite.com).
 If you are creating your own angular based invites, you can include this directly by doing. 
@@ -42,8 +43,8 @@ import { NlibModule } from 'nlib';
 export class AppModule { }
 ```
 
+##### app.component.html
 ```html
-<!-- app.component.html -->
 <nlib-nivite [firewebconfig]="fireconf" (invite)="loadInviteData($event)" (login)="loadUserData($event)" (guest)="loadGuestData($event)"></nlib-nivite>
 ```
 
@@ -68,18 +69,12 @@ export class AppModule { }
 ## nelem
 The Wrapper around nlib, enables stand alone js webpages, react js applications, vue js applications, to interact with invites created on [Nivite.com](https://nivite.jrvite.com). Include the js and do the following to get started
 
+##### index.html
 ```html
-<!--index.html-->
 <head>
-  <!--...-->
   <script src="https://github.com/nivite/nisdk/releases/latest/download/nivite-sdk-es2015.js"></script>
-  <!-- 
-    Above url (latest) recommended, but if you want to be on a specific version, you do so
-    <script src="https://github.com/nivite/nisdk/releases/download/v1.0.1/nivite-sdk-es2015.js"></script>
-  -->
 </head>
 <body>
-  <!--...-->
   <nelem-nivite></nelem-nivite>
   <script>
     const elemArray = document.getElementsByTagName("nelem-nivite");
@@ -127,7 +122,7 @@ npm run start:app
 ./config/all.sh "commit message"
 
 ```
-<!-- 
+
 #### @angular/cli reference
 
 ```sh
