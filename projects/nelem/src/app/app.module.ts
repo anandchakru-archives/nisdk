@@ -3,7 +3,7 @@ import { NgModule, Injector } from '@angular/core';
 import { createCustomElement, WithProperties, NgElement } from '@angular/elements';
 
 import { AppComponent } from './app.component';
-import { NlibModule } from 'nlib';
+import { NlibModule } from 'projects/nlib/src/public-api';
 
 declare global {
   interface HTMLElementTagNameMap {

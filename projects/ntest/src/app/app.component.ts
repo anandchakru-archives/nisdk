@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { environment } from '../environments/environment';
-import { ClogService } from 'nlib';
+import { ClogService } from 'projects/nlib/src/public-api';
 
 @Component({
   selector: 'ntest-root',

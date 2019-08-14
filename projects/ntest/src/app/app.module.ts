@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { NlibModule } from 'nlib';
+import { NlibModule } from 'projects/nlib/src/public-api';
 
 @NgModule({
   declarations: [
