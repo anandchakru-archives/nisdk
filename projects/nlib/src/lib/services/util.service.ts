@@ -77,7 +77,19 @@ export class UtilService {
         hostFirestoreWebConfig, hostFirestoreWebConfig.appId, false, null, PLATFORM_ID, this.ngZone, null);
       /* this.customerFireStorage = new AngularFireStorage(
         hostFirestoreWebConfig, hostFirestoreWebConfig.appId, hostFirestoreWebConfig.storageBucket, PLATFORM_ID, this.ngZone); */
+      this.validateAndSetupInvite();
+    } else {
+      this.http.get('assets/fireconfig.json').subscribe((config: any) => {
+        if (config && config.appId) {
+          this.customerFirestore = new AngularFirestore(config, config.appId, false, null, PLATFORM_ID, this.ngZone, null);
+        }
+        this.validateAndSetupInvite();
+      }, (error) => {
+        this.validateAndSetupInvite();
+      });
     }
+  }
+  private validateAndSetupInvite() {
     if (this.customerFirestore) {
       if (this.inviteId) {
         this.setupInvite();
@@ -99,6 +111,7 @@ export class UtilService {
       this.sampleGuest();
     }
   }
+
   setupInvite() {
     if (this.inviteId && this.customerFirestore) {
       this.customerFirestore.doc<Invite>('nivites/' + this.inviteId).snapshotChanges()
