@@ -1,6 +1,6 @@
 {
   "name": "nisdk",
-  "version": "1.0.10",
+  "version": "1.0.12",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -13,7 +13,6 @@
     "start:lib": "npm run buildinfo && ng build nlib --watch",
     "build:lib": "ng build nlib",
     "build:elem": "npm run build:lib && ng build nelem --prod && node ./config/merge.js",
-    "publish:elem": "npm run ./config/publish.js",
     "publish:lib": "(cd dist/nlib; npm pack) && npm publish dist/nlib/nivite-nlib-${npm_package_version}.tgz"
   },
   "private": false,
