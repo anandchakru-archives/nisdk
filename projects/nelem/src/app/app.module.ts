@@ -7,7 +7,7 @@ import { NlibModule } from 'projects/nlib/src/public-api';
 
 declare global {
   interface HTMLElementTagNameMap {
-    'nelem-nivite': NgElement & WithProperties<{ firewebconfig: string }>;
+    'nelem-nivite': NgElement & WithProperties<{ /* firewebconfig: string */ }>;
   }
 }
 

@@ -45,7 +45,7 @@ export class AppModule { }
 
 ##### app.component.html
 ```html
-<nlib-nivite [firewebconfig]="fireconf" (invite)="loadInviteData($event)" (login)="loadUserData($event)" (guest)="loadGuestData($event)"></nlib-nivite>
+<nlib-nivite (invite)="loadInviteData($event)" (login)="loadUserData($event)" (guest)="loadGuestData($event)"></nlib-nivite>
 ```
 
 ```js
