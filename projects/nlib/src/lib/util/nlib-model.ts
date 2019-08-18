@@ -39,6 +39,7 @@ export interface Invite {
   addrText?: string;
   addrUrl?: string;
   addrDetails?: string;
+  inviteUrl?: string;
   defaultYes?: boolean;         // No  -  (default) free version, Yes - paid version
   showGuests?: boolean;         // Yes -  (default) free version, No  - paid version
   autoApproveNewRsvp?: boolean; // Yes -  (default) free version, No  - paid version
@@ -74,4 +75,12 @@ export class Growl {
   percent: number;
   close = new Subject();
   counter: Observable<number>;
+}
+
+export class Preloading {
+  constructor(
+    public msg = 'Loading..',
+    public spinnerId = 'default.css',
+    public show = false,
+    public timeout = 1500) { }
 }

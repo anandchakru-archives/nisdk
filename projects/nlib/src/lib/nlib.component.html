@@ -1,3 +1,21 @@
+<!--S:LOADING-->
+<ng-container *ngIf="preload?.show">
+    <div class="wrap">
+        <div class="loading">
+            <div class="bounceball"></div>
+            <div class="text">{{preload?.msg}}</div>
+        </div>
+    </div>
+</ng-container>
+<!--E:LOADING-->
+
+
+
+
+
+
+
+
 <!--S:NAV-->
 <ng-container *ngIf="util.authLoaded">
     <!-- header -->

@@ -4,7 +4,7 @@ import { Injectable, PLATFORM_ID, NgZone } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Subject, ReplaySubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Invite, Guest, ModalMsg, Growl } from '../util/nlib-model';
+import { Invite, Guest, ModalMsg, Growl, Preloading } from '../util/nlib-model';
 import { AngularFirestore, Action, DocumentSnapshot, QuerySnapshot } from '@angular/fire/firestore';
 // import { AngularFireStorage } from '@angular/fire/storage';
 import { map } from 'rxjs/operators';
@@ -29,6 +29,7 @@ export class UtilService {
   inviteSub: Subject<Invite> = new Subject();
   guestSub: Subject<Guest> = new Subject();
   showModalSub: Subject<ModalMsg> = new Subject();
+  preloadingSub: Subject<Preloading> = new Subject();
   growlMax = 5;
   growlSub = new ReplaySubject<Growl>(this.growlMax); // Max 5 growls
   // Hard coding for now, because CORS blocked https://nivite.jrvite.com/__/firebase/init.js
@@ -50,6 +51,7 @@ export class UtilService {
   // customerFireStorage: AngularFireStorage;
 
   constructor(private http: HttpClient, private ngZone: NgZone, private clog: ClogService) {
+    this.preloadingSub.next(new Preloading('Initializing authentication library', 'default.css', true));
     this.niviteFireAuth = new AngularFireAuth(this.niviteFirebaseWebConfig, this.niviteFirebaseWebConfig.appId, PLATFORM_ID, this.ngZone);
     if (this.niviteFireAuth) {
       this.provider.addScope('profile');
@@ -58,62 +60,30 @@ export class UtilService {
         this.user = user;
         this.authLoaded = true;
         this.userSub.next(user);
+        this.preloadingSub.next(new Preloading());
       }, (error) => {
         this.authLoaded = true;
         this.userSub.next(undefined);
+        this.preloadingSub.next(new Preloading());
       });
     }
     const url = new URL(window.location.href).searchParams;
     this.inviteId = url.get('iid');       // invite id
     this.clog.visible = url.get('log') ? true : false;         // log - initialize custom console
   }
-  initializeFirestoreAndSetupInvite(hostFirestoreWebConfig: any/* gapi.client.firebase.WebAppConfig */) {
-    if (!hostFirestoreWebConfig || !hostFirestoreWebConfig.appId) {
-      console.log('Invalid fireconfig, trying window.fireconfig');
-      hostFirestoreWebConfig = (window as any).fireconfig;
-    }
-    if (hostFirestoreWebConfig && hostFirestoreWebConfig.appId) {
-      this.customerFirestore = new AngularFirestore(
-        hostFirestoreWebConfig, hostFirestoreWebConfig.appId, false, null, PLATFORM_ID, this.ngZone, null);
-      /* this.customerFireStorage = new AngularFireStorage(
-        hostFirestoreWebConfig, hostFirestoreWebConfig.appId, hostFirestoreWebConfig.storageBucket, PLATFORM_ID, this.ngZone); */
+  initializeFirestoreAndSetupInvite() {
+    this.preloadingSub.next(new Preloading('Initializing firestore', 'default.css', true));
+    this.http.get('assets/fireconfig.json').subscribe((config: any) => {
+      if (config && config.appId) {
+        this.customerFirestore = new AngularFirestore(config, config.appId, false, null, PLATFORM_ID, this.ngZone, null);
+      }
       this.validateAndSetupInvite();
-    } else {
-      console.log('Invalid window.fireconfig, trying assets/fireconfig.json');
-      this.http.get('assets/fireconfig.json').subscribe((config: any) => {
-        if (config && config.appId) {
-          this.customerFirestore = new AngularFirestore(config, config.appId, false, null, PLATFORM_ID, this.ngZone, null);
-        }
-        this.validateAndSetupInvite();
-      }, (error) => {
-        this.validateAndSetupInvite();
-      });
-    }
+    }, (error) => {
+      this.validateAndSetupInvite();
+    });
   }
-  private validateAndSetupInvite() {
-    if (this.customerFirestore) {
-      if (this.inviteId) {
-        this.setupInvite();
-      } else {
-        this.growlSub.next(new Growl('WARN: Preview mode'
-          , 'Missing iid in url.', 'warning'));
-        this.sampleInvite();
-        this.sampleGuest();
-      }
-    } else {
-      if (this.inviteId) {
-        this.growlSub.next(new Growl('WARN: Preview mode'
-          , 'Invalid firebase config in environment(.prod).ts', 'warning'));
-      } else {
-        this.growlSub.next(new Growl('WARN: Preview mode'
-          , 'Invalid firebase config in environment(.prod).ts and Missing iid in url.', 'warning'));
-      }
-      this.sampleInvite();
-      this.sampleGuest();
-    }
-  }
-
   setupInvite() {
+    this.preloadingSub.next(new Preloading('Loading invite details', 'default.css', true));
     if (this.inviteId && this.customerFirestore) {
       this.customerFirestore.doc<Invite>('nivites/' + this.inviteId).snapshotChanges()
         .pipe(map((inviteDocSnap: Action<DocumentSnapshot<Invite>>) => {
@@ -124,14 +94,17 @@ export class UtilService {
           return inviteDocSnap;
         })).subscribe((inviteDocSnap: Action<DocumentSnapshot<Invite>>) => {
           this.inviteSub.next(inviteDocSnap.payload.data());
+          this.preloadingSub.next(new Preloading());
         }, (error) => {
           this.growlSub.next(new Growl('ERROR: Invalid invite'
             , 'Could not load invite with iid=' + this.inviteId + '. Invalid iid?', 'danger'));
           this.inviteSub.next(undefined);
+          this.preloadingSub.next(new Preloading());
         });
     }
   }
   setupGuest(user: firebase.User) {
+    this.preloadingSub.next(new Preloading('Loading guest details', 'default.css', true));
     if (this.inviteId && this.customerFirestore) {
       if (user) { // login
         this.customerFirestore.collection('nivites/' + this.inviteId + '/guests', ref => ref.where('email', '==', this.user.email))
@@ -144,9 +117,11 @@ export class UtilService {
               this.clog.log('Adding new.');
               this.addNewGuest();
             }
+            this.preloadingSub.next(new Preloading());
           }, (error) => {
             this.growlSub.next(new Growl('ERROR: Preview mode'
               , 'Could not load invite with iid=' + this.inviteId + '. Invalid iid?', 'danger'));
+            this.preloadingSub.next(new Preloading());
           });
       } else { // logout
         this.guest = undefined;
@@ -244,6 +219,44 @@ export class UtilService {
     };
     this.guestSub.next(this.guest);
   }
+  makeNewGuest(): Guest {
+    return {
+      niviteuid: '',
+      name: this.user.displayName,
+      email: this.user.email,
+      adultCount: 0,
+      kidCount: 0,
+      hostApproved: false,
+      longMsg: '',
+      notifyUpdates: true,
+      role: 'GUEST',
+      rsvp: 'V',
+      shortMsg: ''
+    };
+  }
+  private validateAndSetupInvite() {
+    if (this.customerFirestore) {
+      if (this.inviteId) {
+        this.setupInvite();
+      } else {
+        this.growlSub.next(new Growl('WARN: Preview mode'
+          , 'Missing iid in url.', 'warning'));
+        this.sampleInvite();
+        this.sampleGuest();
+      }
+    } else {
+      if (this.inviteId) {
+        this.growlSub.next(new Growl('WARN: Preview mode'
+          , 'Invalid firebase config in environment(.prod).ts', 'warning'));
+      } else {
+        this.growlSub.next(new Growl('WARN: Preview mode'
+          , 'Invalid firebase config in environment(.prod).ts and Missing iid in url.', 'warning'));
+      }
+      this.sampleInvite();
+      this.sampleGuest();
+    }
+    this.preloadingSub.next(new Preloading());
+  }
   private listenGuest() {
     this.customerFirestore.doc<Guest>('nivites/' + this.inviteId + '/guests/' + this.guestId).snapshotChanges()
       .subscribe((guestDocSnap: Action<DocumentSnapshot<Guest>>) => {
@@ -267,21 +280,6 @@ export class UtilService {
         // TODO: Alert User that not able to create a new invite.
         this.clog.log(error);
       });
-  }
-  makeNewGuest(): Guest {
-    return {
-      niviteuid: '',
-      name: this.user.displayName,
-      email: this.user.email,
-      adultCount: 0,
-      kidCount: 0,
-      hostApproved: false,
-      longMsg: '',
-      notifyUpdates: true,
-      role: 'GUEST',
-      rsvp: 'V',
-      shortMsg: ''
-    };
   }
   private ifNumberMoment(input: moment_.Moment | number): moment_.Moment {
     return (typeof input === 'number') ? moment(input) : input;

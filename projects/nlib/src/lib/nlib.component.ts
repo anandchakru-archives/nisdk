@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter, OnDestroy, Input, Renderer2, V
 import { UtilService } from './services/util.service';
 import { takeUntil, take, map } from 'rxjs/operators';
 import { Subject, interval, timer } from 'rxjs';
-import { Invite, Guest, Growl, ModalMsg } from './util/nlib-model';
+import { Invite, Guest, Growl, ModalMsg, Preloading } from './util/nlib-model';
 import { Title } from '@angular/platform-browser';
 import { ClogService } from './services/clog.service';
 import { AtcService } from './services/atc.service';
@@ -16,11 +16,12 @@ import { FormGroup, FormBuilder } from '@angular/forms';
   styleUrls: ['./nlib.component.scss']
 })
 export class NlibComponent implements OnInit, OnDestroy {
+  preload = new Preloading();
   private uns = new Subject();
-  @Input() firewebconfig: any  /* gapi.client.firebase.WebAppConfig */;
   @Output() invite = new EventEmitter<Invite>();
   @Output() login = new EventEmitter<firebase.User>();
   @Output() guest = new EventEmitter<Guest>();
+  @Output() preloading = new EventEmitter<Preloading>();
   //ATC
   @ViewChild('atcModal', { static: false }) atcModal: ElementRef;
   //GROWLS
@@ -65,7 +66,7 @@ export class NlibComponent implements OnInit, OnDestroy {
     });
     title.setTitle('Nivite - Loading');
     this.util.userSub.pipe(take(1)).subscribe((user: firebase.User) => {  // One time - invitalize firestore config
-      this.util.initializeFirestoreAndSetupInvite(this.firewebconfig);
+      this.util.initializeFirestoreAndSetupInvite();
     });
     this.util.guestSub.pipe(takeUntil(this.uns)).subscribe((guest: Guest) => { // On everytime guest is loaded
       this.guest.emit(guest);
@@ -77,6 +78,10 @@ export class NlibComponent implements OnInit, OnDestroy {
     this.util.userSub.pipe(takeUntil(this.uns)).subscribe((user: firebase.User) => {  // On every login/logout
       this.util.setupGuest(user);
       this.login.emit(user);
+    });
+    this.util.preloadingSub.pipe(takeUntil(this.uns)).subscribe((preloading: Preloading) => { // On loading animcation stop/start
+      this.preload = preloading;
+      this.preloading.emit(preloading);
     });
   }
 
