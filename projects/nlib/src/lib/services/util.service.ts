@@ -212,6 +212,11 @@ export class UtilService {
         , description: 'Barbeque grill'
         , tags: ['meat', 'cook', 'bbq', 'slider']
         , title: 'Barbeque'
+      }, {
+        url: 'assets/default.jpg',
+        description: 'Demo background',
+        tags: ['bg', 'background'],
+        title: 'Background'
       }]
     };
     this.invite.timeFromString = this.ifMomentString(this.invite.timeFrom);
