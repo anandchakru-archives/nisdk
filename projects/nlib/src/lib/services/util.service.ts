@@ -300,7 +300,7 @@ export class UtilService {
     if (!input) {
       return undefined;
     }
-    return (typeof input === 'number') ? moment(input, tz) : input;
+    return (typeof input === 'number') ? moment.tz(input, tz) : input;
   }
   private ifMomentString(input: moment_.Moment): string {
     return input ? input.local().format('LLLL') : undefined;
