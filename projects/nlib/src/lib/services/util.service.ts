@@ -257,10 +257,10 @@ export class UtilService {
     } else {
       if (this.inviteId) {
         this.growlSub.next(new Growl('WARN: Preview mode'
-          , 'Invalid firebase config in environment(.prod).ts', 'warning'));
+          , 'Invalid firebase config in fireconfig.json', 'warning'));
       } else {
         this.growlSub.next(new Growl('WARN: Preview mode'
-          , 'Invalid firebase config in environment(.prod).ts and Missing iid in url.', 'warning'));
+          , 'Invalid firebase config in fireconfig.json and Missing iid in url.', 'warning'));
       }
       this.sampleInvite();
       this.sampleGuest();
