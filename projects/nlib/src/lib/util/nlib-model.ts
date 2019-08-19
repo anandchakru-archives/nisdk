@@ -80,7 +80,11 @@ export class Growl {
 export class Preloading {
   constructor(
     public msg = 'Loading..',
-    public spinnerId = 'default.css',
     public show = false,
-    public timeout = 1500) { }
+    public timeout = 1500,
+    public id?: string) {
+    if (!id) {
+      this.id = Math.random().toString(36).substr(2, 7);
+    }
+  }
 }

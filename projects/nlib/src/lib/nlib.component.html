@@ -1,12 +1,12 @@
 <!--S:LOADING-->
-<ng-container *ngIf="preload?.show">
-    <div class="wrap">
-        <div class="loading">
-            <div class="bounceball"></div>
-            <div class="text">{{preload?.msg}}</div>
+<div class="n3preload" *ngFor="let preload of preloads | keyvalue">
+    <div class="n3preloadwrap">
+        <div class="n3preloadloading">
+            <div class="n3preloadbounceball"></div>
+            <div class="n3preloadtext">{{preload?.value?.msg}}</div>
         </div>
     </div>
-</ng-container>
+</div>
 <!--E:LOADING-->
 
 

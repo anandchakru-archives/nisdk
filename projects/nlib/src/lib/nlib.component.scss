@@ -141,21 +141,37 @@ $width: 15px;
 $height: 15px;
 $bounce_height: 30px;
 
-.wrap {
+.n3preload {
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    animation: bg 2s ease infinite;
+    background: linear-gradient(270deg, #cc7d83, #f8e5e7);
+    background-size: 400% 400%;
+    z-index: 3;
+    opacity: 0.4;
+  }
+}
+
+.n3preloadwrap {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
-.text {
-  color: #fbae17;
+.n3preloadtext {
+  color: #cc7d83;
   display: inline-block;
   margin-left: 5px;
   font-family: "Montserrat", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-.bounceball {
+.n3preloadbounceball {
   position: relative;
   display: inline-block;
   height: 37px;
@@ -169,7 +185,7 @@ $bounce_height: 30px;
     width: $width;
     height: $height;
     border-radius: 50%;
-    background-color: #fbae17;
+    background-color: #cc7d83;
     transform-origin: 50%;
     animation: bounce 500ms alternate infinite ease;
   }

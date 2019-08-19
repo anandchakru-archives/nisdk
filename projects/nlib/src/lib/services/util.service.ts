@@ -51,7 +51,8 @@ export class UtilService {
   // customerFireStorage: AngularFireStorage;
 
   constructor(private http: HttpClient, private ngZone: NgZone, private clog: ClogService) {
-    this.preloadingSub.next(new Preloading('Initializing authentication library', 'default.css', true));
+    const preload = new Preloading('Initializing authentication library', true);
+    this.preloadingSub.next(preload);
     this.niviteFireAuth = new AngularFireAuth(this.niviteFirebaseWebConfig, this.niviteFirebaseWebConfig.appId, PLATFORM_ID, this.ngZone);
     if (this.niviteFireAuth) {
       this.provider.addScope('profile');
@@ -60,30 +61,32 @@ export class UtilService {
         this.user = user;
         this.authLoaded = true;
         this.userSub.next(user);
-        this.preloadingSub.next(new Preloading());
       }, (error) => {
         this.authLoaded = true;
         this.userSub.next(undefined);
-        this.preloadingSub.next(new Preloading());
       });
+      preload.show = false;
+      this.preloadingSub.next(preload);
     }
     const url = new URL(window.location.href).searchParams;
     this.inviteId = url.get('iid');       // invite id
     this.clog.visible = url.get('log') ? true : false;         // log - initialize custom console
   }
   initializeFirestoreAndSetupInvite() {
-    this.preloadingSub.next(new Preloading('Initializing firestore', 'default.css', true));
+    const preload = new Preloading('Initializing firestore', true);
+    this.preloadingSub.next(preload);
     this.http.get('assets/fireconfig.json').subscribe((config: any) => {
       if (config && config.appId) {
         this.customerFirestore = new AngularFirestore(config, config.appId, false, null, PLATFORM_ID, this.ngZone, null);
       }
-      this.validateAndSetupInvite();
+      this.validateAndSetupInvite(preload);
     }, (error) => {
-      this.validateAndSetupInvite();
+      this.validateAndSetupInvite(preload);
     });
   }
   setupInvite() {
-    this.preloadingSub.next(new Preloading('Loading invite details', 'default.css', true));
+    const preload = new Preloading('Loading invite details', true);
+    this.preloadingSub.next(preload);
     if (this.inviteId && this.customerFirestore) {
       this.customerFirestore.doc<Invite>('nivites/' + this.inviteId).snapshotChanges()
         .pipe(map((inviteDocSnap: Action<DocumentSnapshot<Invite>>) => {
@@ -94,18 +97,21 @@ export class UtilService {
           return inviteDocSnap;
         })).subscribe((inviteDocSnap: Action<DocumentSnapshot<Invite>>) => {
           this.inviteSub.next(inviteDocSnap.payload.data());
-          this.preloadingSub.next(new Preloading());
+          preload.show = false;
+          this.preloadingSub.next(preload);
         }, (error) => {
           this.growlSub.next(new Growl('ERROR: Invalid invite'
             , 'Could not load invite with iid=' + this.inviteId + '. Invalid iid?', 'danger'));
           this.inviteSub.next(undefined);
-          this.preloadingSub.next(new Preloading());
+          preload.show = false;
+          this.preloadingSub.next(preload);
         });
     }
   }
   setupGuest(user: firebase.User) {
-    this.preloadingSub.next(new Preloading('Loading guest details', 'default.css', true));
     if (this.inviteId && this.customerFirestore) {
+      const preload = new Preloading('Loading guest details', true);
+      this.preloadingSub.next(preload);
       if (user) { // login
         this.customerFirestore.collection('nivites/' + this.inviteId + '/guests', ref => ref.where('email', '==', this.user.email))
           .get().subscribe((guestDocChgAc: QuerySnapshot<Guest>) => {
@@ -117,15 +123,19 @@ export class UtilService {
               this.clog.log('Adding new.');
               this.addNewGuest();
             }
-            this.preloadingSub.next(new Preloading());
+            preload.show = false;
+            this.preloadingSub.next(preload);
           }, (error) => {
             this.growlSub.next(new Growl('ERROR: Preview mode'
               , 'Could not load invite with iid=' + this.inviteId + '. Invalid iid?', 'danger'));
-            this.preloadingSub.next(new Preloading());
+            preload.show = false;
+            this.preloadingSub.next(preload);
           });
       } else { // logout
         this.guest = undefined;
         this.guestSub.next(this.guest);
+        preload.show = false;
+        this.preloadingSub.next(preload);
       }
     }
   }
@@ -234,7 +244,7 @@ export class UtilService {
       shortMsg: ''
     };
   }
-  private validateAndSetupInvite() {
+  private validateAndSetupInvite(preload: Preloading) {
     if (this.customerFirestore) {
       if (this.inviteId) {
         this.setupInvite();
@@ -255,7 +265,8 @@ export class UtilService {
       this.sampleInvite();
       this.sampleGuest();
     }
-    this.preloadingSub.next(new Preloading());
+    preload.show = false;
+    this.preloadingSub.next(preload);
   }
   private listenGuest() {
     this.customerFirestore.doc<Guest>('nivites/' + this.inviteId + '/guests/' + this.guestId).snapshotChanges()

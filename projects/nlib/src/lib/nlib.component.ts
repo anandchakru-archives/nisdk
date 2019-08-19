@@ -16,7 +16,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
   styleUrls: ['./nlib.component.scss']
 })
 export class NlibComponent implements OnInit, OnDestroy {
-  preload = new Preloading();
+  preloads: { [key: string]: Preloading } = {};
   private uns = new Subject();
   @Output() invite = new EventEmitter<Invite>();
   @Output() login = new EventEmitter<firebase.User>();
@@ -80,8 +80,17 @@ export class NlibComponent implements OnInit, OnDestroy {
       this.login.emit(user);
     });
     this.util.preloadingSub.pipe(takeUntil(this.uns)).subscribe((preloading: Preloading) => { // On loading animcation stop/start
-      this.preload = preloading;
+      this.preloads[preloading.id] = preloading;
       this.preloading.emit(preloading);
+      if (preloading.show && preloading.timeout) {
+        setTimeout(() => {
+          delete this.preloads[preloading.id];
+          this.preloading.emit(preloading);
+        }, preloading.timeout);
+      } else {
+        delete this.preloads[preloading.id];
+        this.preloading.emit(preloading);
+      }
     });
   }
 

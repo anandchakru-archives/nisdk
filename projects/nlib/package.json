@@ -1,6 +1,6 @@
 {
   "name": "@nivite/nlib",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "dependencies": {},
   "peerDependencies": {
     "@angular/common": "^8.0.3",

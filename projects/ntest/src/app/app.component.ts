@@ -22,4 +22,7 @@ export class AppComponent {
     this.guest = guest;
     this.clog.log('guest: ' + (guest ? guest.email : guest));
   }
+  onPreload(preload: any) {
+    this.clog.log('preload: ' + JSON.stringify(preload));
+  }
 }

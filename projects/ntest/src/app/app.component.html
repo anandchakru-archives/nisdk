@@ -1,4 +1,5 @@
-<nlib-nivite (invite)="loadInviteData($event)" (login)="loadUserData($event)" (guest)="loadGuestData($event)">
+<nlib-nivite (invite)="loadInviteData($event)" (login)="loadUserData($event)" (guest)="loadGuestData($event)"
+  (preloading)="onPreload($event)">
 </nlib-nivite>
 <h1 class="jumbotron">Main invitation goes here</h1>
 <ng-container *ngIf="invite">
