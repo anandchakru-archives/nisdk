@@ -92,11 +92,13 @@ export class UtilService {
         .pipe(map((inviteDocSnap: Action<DocumentSnapshot<Invite>>) => {
           this.invite = inviteDocSnap.payload.data();
           this.inviteId = inviteDocSnap.payload.id;
-          this.invite.timeFrom = this.ifNumberMoment(this.invite.timeFrom);
-          this.invite.timeTo = this.ifNumberMoment(this.invite.timeTo);
+          this.invite.timeFrom = this.ifNumberMoment(this.invite.timeFrom, this.invite.tz);
+          this.invite.timeTo = this.ifNumberMoment(this.invite.timeTo, this.invite.tz);
+          this.invite.timeFromString = this.ifMomentString(this.invite.timeFrom);
+          this.invite.timeToString = this.ifMomentString(this.invite.timeTo);
           return inviteDocSnap;
         })).subscribe((inviteDocSnap: Action<DocumentSnapshot<Invite>>) => {
-          this.inviteSub.next(inviteDocSnap.payload.data());
+          this.inviteSub.next(this.invite);
           preload.show = false;
           this.preloadingSub.next(preload);
         }, (error) => {
@@ -212,6 +214,8 @@ export class UtilService {
         , title: 'Barbeque'
       }]
     };
+    this.invite.timeFromString = this.ifMomentString(this.invite.timeFrom);
+    this.invite.timeToString = this.ifMomentString(this.invite.timeTo);
     this.inviteSub.next(this.invite);
   }
   sampleGuest() {
@@ -292,7 +296,13 @@ export class UtilService {
         this.clog.log(error);
       });
   }
-  private ifNumberMoment(input: moment_.Moment | number): moment_.Moment {
-    return (typeof input === 'number') ? moment(input) : input;
+  private ifNumberMoment(input: moment_.Moment | number, tz: string): moment_.Moment {
+    if (!input) {
+      return undefined;
+    }
+    return (typeof input === 'number') ? moment(input, tz) : input;
+  }
+  private ifMomentString(input: moment_.Moment): string {
+    return input ? input.local().format('LLLL') : undefined;
   }
 }

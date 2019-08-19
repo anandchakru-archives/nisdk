@@ -50,6 +50,8 @@ export interface Invite {
   _dateTo?: Date;
   _timeFrom?: Date;
   _timeTo?: Date; */
+  timeFromString?: string;            // converted to user's local timezone
+  timeToString?: string;              // converted to user's local timezone
 }
 
 export interface ModalMsg {
