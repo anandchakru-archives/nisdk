@@ -73,7 +73,12 @@ export class NlibComponent implements OnInit, OnDestroy {
     });
     this.util.inviteSub.pipe(takeUntil(this.uns)).subscribe((invite: Invite) => { // On everytime invite is loaded
       this.invite.emit(invite);
-      title.setTitle('Nivite - ' + (invite ? invite.hostName : ' Oops!'));
+      const cTitle = 'Nivite - ' + (invite ? invite.hostName : ' Oops!');
+      title.setTitle(cTitle);
+      document.querySelector('meta[name="og:title"]').setAttribute('content', cTitle);
+      const subdscr = invite ? invite.shortMsg : ' Oops!';
+      document.querySelector('meta[name="og:description"]').setAttribute('content', subdscr);
+      document.querySelector('meta[name="subject"]').setAttribute('content', subdscr);
     });
     this.util.userSub.pipe(takeUntil(this.uns)).subscribe((user: firebase.User) => {  // On every login/logout
       this.util.setupGuest(user);

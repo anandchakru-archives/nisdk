@@ -213,7 +213,7 @@ export class UtilService {
         , tags: ['meat', 'cook', 'bbq', 'slider']
         , title: 'Barbeque'
       }, {
-        url: 'assets/default.jpg',
+        url: 'assets/demobg.jpg',
         description: 'Demo background',
         tags: ['bg', 'background'],
         title: 'Background'
