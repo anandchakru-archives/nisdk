@@ -74,11 +74,20 @@ export class NlibComponent implements OnInit, OnDestroy {
     this.util.inviteSub.pipe(takeUntil(this.uns)).subscribe((invite: Invite) => { // On everytime invite is loaded
       this.invite.emit(invite);
       const cTitle = 'Nivite - ' + (invite ? invite.hostName : ' Oops!');
-      title.setTitle(cTitle);
-      document.querySelector('meta[name="og:title"]').setAttribute('content', cTitle);
       const subdscr = invite ? invite.shortMsg : ' Oops!';
-      document.querySelector('meta[name="og:description"]').setAttribute('content', subdscr);
-      document.querySelector('meta[name="subject"]').setAttribute('content', subdscr);
+      title.setTitle(cTitle);
+      const metaTitle = document.querySelector('meta[property="og:title"]');
+      if (metaTitle) {
+        metaTitle.setAttribute('content', cTitle);
+      }
+      const metaDescription = document.querySelector('meta[property="og:description"]');
+      if (metaDescription) {
+        metaDescription.setAttribute('content', subdscr);
+      }
+      const metaSubject = document.querySelector('meta[name="subject"]');
+      if (metaSubject) {
+        metaSubject.setAttribute('content', subdscr);
+      }
     });
     this.util.userSub.pipe(takeUntil(this.uns)).subscribe((user: firebase.User) => {  // On every login/logout
       this.util.setupGuest(user);
