@@ -125,6 +125,9 @@ export class UtilService {
         this.authLoaded = true;
         this.userSub.next(undefined);
       });
+    } else {
+      this.authLoaded = true;
+      this.growlSub.next(new Growl('ERROR: FirebaseAuth failed', 'Could not initialize Firebase. Are you online?', 'danger'));
     }
     preload.show = false;
     this.preloadingSub.next(preload);
