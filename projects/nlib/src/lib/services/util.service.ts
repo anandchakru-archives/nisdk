@@ -37,38 +37,31 @@ export class UtilService {
   // this.http.get('https://nivite.jrvite.com/__/firebase/init.js').subscribe((rsp) => {
   //   this.niviteFireAuth = new AngularFireAuth(this.firebaseWebConfig, this.firebaseWebConfig.appId, PLATFORM_ID, this.ngZone);
   // });
-  niviteFirebaseWebConfig = {
-    apiKey: 'AIzaSyDUFUg-yCwu0GbvSf8DJ-17WlzcgnbZhzo',
-    appId: '1:212059574978:web:f955498611c402d9',
-    databaseURL: 'https://nivite-firebase.firebaseio.com',
-    storageBucket: 'nivite-firebase.appspot.com',
-    authDomain: 'nivite-firebase.firebaseapp.com',
-    messagingSenderId: '212059574978',
-    projectId: 'nivite-firebase'
-  };
-  niviteFireAuth: AngularFireAuth;
+  // niviteFirebaseWebConfig = {
+  //   apiKey: 'AIzaSyDUFUg-yCwu0GbvSf8DJ-17WlzcgnbZhzo',
+  //   appId: '1:212059574978:web:f955498611c402d9',
+  //   databaseURL: 'https://nivite-firebase.firebaseio.com',
+  //   storageBucket: 'nivite-firebase.appspot.com',
+  //   authDomain: 'nivite-firebase.firebaseapp.com',
+  //   messagingSenderId: '212059574978',
+  //   projectId: 'nivite-firebase'
+  // };
+  // niviteFireAuth: AngularFireAuth;
+  // this.setupAuth({
+  //   apiKey: 'AIzaSyDUFUg-yCwu0GbvSf8DJ-17WlzcgnbZhzo',
+  //   appId: '1:212059574978:web:f955498611c402d9',
+  //   databaseURL: 'https://nivite-firebase.firebaseio.com',
+  //   storageBucket: 'nivite-firebase.appspot.com',
+  //   authDomain: 'nivite-firebase.firebaseapp.com',
+  //   messagingSenderId: '212059574978',
+  //   projectId: 'nivite-firebase'
+  // });
+  customerFireAuth: AngularFireAuth;
   customerFirestore: AngularFirestore;
   customerFirestoreSub: Subject<AngularFirestore> = new ReplaySubject(1);
   // customerFireStorage: AngularFireStorage;
 
   constructor(private http: HttpClient, private ngZone: NgZone, private clog: ClogService) {
-    const preload = new Preloading('Initializing authentication library', true);
-    this.preloadingSub.next(preload);
-    this.niviteFireAuth = new AngularFireAuth(this.niviteFirebaseWebConfig, this.niviteFirebaseWebConfig.appId, PLATFORM_ID, this.ngZone);
-    if (this.niviteFireAuth) {
-      this.provider.addScope('profile');
-      this.provider.addScope('email');
-      this.niviteFireAuth.authState.subscribe((user: firebase.User) => {
-        this.user = user;
-        this.authLoaded = true;
-        this.userSub.next(user);
-      }, (error) => {
-        this.authLoaded = true;
-        this.userSub.next(undefined);
-      });
-      preload.show = false;
-      this.preloadingSub.next(preload);
-    }
     const url = new URL(window.location.href).searchParams;
     this.inviteId = url.get('iid');       // invite id
     this.clog.visible = url.get('log') ? true : false;         // log - initialize custom console
@@ -80,11 +73,31 @@ export class UtilService {
       if (config && config.appId) {
         this.customerFirestore = new AngularFirestore(config, config.appId, false, null, PLATFORM_ID, this.ngZone, null);
         this.customerFirestoreSub.next(this.customerFirestore);
+        this.setupAuth(config);
       }
       this.validateAndSetupInvite(preload);
     }, (error) => {
       this.validateAndSetupInvite(preload);
     });
+  }
+  setupAuth(config: any) {
+    const preload = new Preloading('Initializing authentication library', true);
+    this.preloadingSub.next(preload);
+    this.customerFireAuth = new AngularFireAuth(config, config.appId, PLATFORM_ID, this.ngZone);
+    if (this.customerFireAuth) {
+      this.provider.addScope('profile');
+      this.provider.addScope('email');
+      this.customerFireAuth.authState.subscribe((user: firebase.User) => {
+        this.user = user;
+        this.authLoaded = true;
+        this.userSub.next(user);
+      }, (error) => {
+        this.authLoaded = true;
+        this.userSub.next(undefined);
+      });
+      preload.show = false;
+      this.preloadingSub.next(preload);
+    }
   }
   setupInvite() {
     const preload = new Preloading('Loading invite details', true);
@@ -130,7 +143,7 @@ export class UtilService {
             preload.show = false;
             this.preloadingSub.next(preload);
           }, (error) => {
-            this.growlSub.next(new Growl('ERROR: Preview mode'
+            this.growlSub.next(new Growl('ERROR: Setup Guest'
               , 'Could not load guest with email=' + this.user.email + '. Please try after sometime', 'danger'));
             preload.show = false;
             this.preloadingSub.next(preload);
@@ -161,12 +174,12 @@ export class UtilService {
     return this.userSub.asObservable();
   }
   google(cb: () => void) {
-    this.niviteFireAuth.auth.signInWithPopup(this.provider).then((uc: firebase.auth.UserCredential) => {
+    this.customerFireAuth.auth.signInWithPopup(this.provider).then((uc: firebase.auth.UserCredential) => {
       cb();
     });
   }
   logout() {
-    this.niviteFireAuth.auth.signOut();
+    this.customerFireAuth.auth.signOut();
   }
   toggleNav() {
     this.collapsed = !this.collapsed;
@@ -180,6 +193,9 @@ export class UtilService {
         this.showModalSub.next({ id, show: true });
       });
     } else {
+      if (!this.guest) {
+        this.setupGuest(this.user);
+      }
       this.showModalSub.next({ id, show: true });
     }
   }

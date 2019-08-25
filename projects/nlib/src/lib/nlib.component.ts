@@ -65,9 +65,7 @@ export class NlibComponent implements OnInit, OnDestroy {
       }
     });
     title.setTitle('Nivite - Loading');
-    this.util.userSub.pipe(take(1)).subscribe((user: firebase.User) => {  // One time - initialize firestore config
-      this.util.initializeFirestoreAndSetupInvite();
-    });
+    this.util.initializeFirestoreAndSetupInvite();
     this.util.guestSub.pipe(takeUntil(this.uns)).subscribe((guest: Guest) => { // Everytime guest is loaded
       this.guest.emit(guest);
       this.guestCurrent = guest;
@@ -90,15 +88,10 @@ export class NlibComponent implements OnInit, OnDestroy {
       if (metaSubject) {
         metaSubject.setAttribute('content', subdscr);
       }
-    });
-    forkJoin(this.util.customerFirestoreSub, this.util.userSub).pipe(takeUntil(this.uns)).subscribe((joined: any[]) => {
-      const customerFirestore = joined[0];
-      const user = joined[1];
-      if (customerFirestore && user) {
-        this.util.setupGuest(user);
-      }
+      this.util.setupGuest(this.util.user); // Everytime Invite loads, refresh guest
     });
     this.util.userSub.pipe(takeUntil(this.uns)).subscribe((user: firebase.User) => {  // Every login/logout
+      this.util.setupGuest(user);
       this.login.emit(user);
     });
     this.util.preloadingSub.pipe(takeUntil(this.uns)).subscribe((preloading: Preloading) => { // Every preload animation stop/start
@@ -114,6 +107,7 @@ export class NlibComponent implements OnInit, OnDestroy {
         this.preloading.emit(preloading);
       }
     });
+    this.resetRsvpForm();
   }
 
   ngOnInit() {

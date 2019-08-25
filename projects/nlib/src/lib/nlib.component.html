@@ -21,7 +21,7 @@
     <!-- header -->
     <nav class="slidedown navbar navbar-expand-md navbar-dark bg-dark fixed-top mb-5"
         [ngClass]="util.isHost()?'justify-content-between':''">
-        <a class="navbar-brand" href="//nivite.jrvite.com" (click)="util.toggleNav(); true">
+        <a class="navbar-brand" href="//nivite.jrvite.com" (click)="util.hideNav(); true">
             <img src="//nivite.jrvite.com/assets/logo.png" width="30" height="30" class="d-inline-block align-top"
                 alt="Nivite Logo">
             Nivite
@@ -32,19 +32,19 @@
         <div class="navbar-collapse" [class.collapse]="util.collapsed">
             <div class="navbar-nav mr-auto">
                 <a class="nav-item nav-link" href="https://nivite.jrvite.com/ws/editor"
-                    (click)="util.toggleNav(); true">New invite</a>
+                    (click)="util.hideNav(); true">New invite</a>
                 <a class="nav-item nav-link" href="https://nivite.jrvite.com/ws/invites/list"
-                    (click)="util.toggleNav(); true">Invites</a>
+                    (click)="util.hideNav(); true">Invites</a>
             </div>
             <div class="navbar-nav">
                 <ng-container *ngIf="util.user; else noauth">
                     <a class="nav-item nav-link">
                         <span>{{util.user?.email}}</span>
                     </a>
-                    <a class="nav-item nav-link pointer" (click)="util.toggleNav(); util.logout(); false;">Logout</a>
+                    <a class="nav-item nav-link pointer" (click)="util.hideNav(); util.logout(); false;">Logout</a>
                 </ng-container>
                 <ng-template #noauth>
-                    <a class="nav-item nav-link pointer" (click)="util.toggleNav(); loginPop()">
+                    <a class="nav-item nav-link pointer" (click)="util.hideNav(); loginPop()">
                         <span>Login</span>
                     </a>
                 </ng-template>
@@ -55,7 +55,7 @@
     <nav class="slideup navbar fixed-bottom navbar-light bg-light justify-content-between">
         <div class="btn-group">
             <a class="nav-item nav-link btn btn-sm btn-primary pointer text-dark"
-                (click)="util.toggleNav(); util.showModal('rsvp'); false;"> RSVP
+                (click)="util.hideNav(); util.showModal('rsvp'); false;"> RSVP
                 <span class="sr-only">RSVP</span>
             </a>
             <a class="nav-item nav-link btn btn-sm btn-primary pointer text-dark" (click)="util.showModal('atc')">
