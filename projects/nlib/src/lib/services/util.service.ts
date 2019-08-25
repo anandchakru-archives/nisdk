@@ -19,6 +19,7 @@ export class UtilService {
   provider = new firebase.auth.GoogleAuthProvider();
   invite: Invite;
   inviteId: string;
+  premium: boolean;
   guest: Guest;
   guestId: string;
   retryCnt: number;
@@ -32,37 +33,81 @@ export class UtilService {
   preloadingSub: Subject<Preloading> = new Subject();
   growlMax = 5;
   growlSub = new ReplaySubject<Growl>(this.growlMax); // Max 5 growls
-
+  niviteFireAuth: AngularFireAuth;
   customerFireAuth: AngularFireAuth;
   customerFirestore: AngularFirestore;
   customerFirestoreSub: Subject<AngularFirestore> = new ReplaySubject(1);
 
+  matcher = new RegExp(/{(.|\s)*}/);  // https://regex101.com/r/Mb4dBB/1
+  replacer = new RegExp(/("(.*?)"|(\w+))(\s*:\s*(".*?"|.))/gm); // https://regex101.com/r/IkZZcp/1
+
   constructor(private http: HttpClient, private ngZone: NgZone, private clog: ClogService) {
     const url = new URL(window.location.href).searchParams;
-    this.inviteId = url.get('iid');       // invite id
-    this.clog.visible = url.get('log') ? true : false;         // log - initialize custom console
+    this.inviteId = url.get('iid');                             // invite id
+    this.premium = url.get('p') ? true : false;                 // premium/paid version - uses assets/fireconfig.json
+    this.clog.visible = url.get('log') ? true : false;          // log - initialize custom console
+    this.provider.addScope('profile');
+    this.provider.addScope('email');
   }
   initializeFirestoreAndSetupInvite() {
     const preload = new Preloading('Initializing firestore', true);
     this.preloadingSub.next(preload);
-    this.http.get('assets/fireconfig.json').subscribe((config: any) => {
-      if (config && config.appId) {
-        this.customerFirestore = new AngularFirestore(config, config.appId, false, null, PLATFORM_ID, this.ngZone, null);
-        this.customerFirestoreSub.next(this.customerFirestore);
-        this.setupAuth(config);
-      }
+    if (this.premium) {
+      this.http.get('assets/fireconfig.json').subscribe((config: any) => {
+        this.clog.log('host-fireconfig.json: ' + config);
+        if (config && config.appId) {
+          this.customerFirestore = new AngularFirestore(config, config.appId, false, null, PLATFORM_ID, this.ngZone, null);
+          this.customerFirestoreSub.next(this.customerFirestore);
+          this.setupAuth(config);
+        }
+        this.validateAndSetupInvite(preload);
+      }, (error) => {
+        this.validateAndSetupInvite(preload);
+      });
+    } else {
+      const config = {
+        apiKey: 'AIzaSyBdU-x2emmJIv84NuNLGhvFU_l8DlJyAmY',
+        appId: '1:212059574978:web:f955498611c402d9',
+        databaseURL: 'https://nivite-firebase.firebaseio.com',
+        storageBucket: 'nivite-firebase.appspot.com',
+        authDomain: 'nivite-firebase.firebaseapp.com',
+        messagingSenderId: '212059574978',
+        projectId: 'nivite-firebase'
+      };
+      this.customerFirestore = new AngularFirestore(config, config.appId, false, null, PLATFORM_ID, this.ngZone, null);
+      this.customerFirestoreSub.next(this.customerFirestore);
+      this.setupAuth(config);
       this.validateAndSetupInvite(preload);
-    }, (error) => {
-      this.validateAndSetupInvite(preload);
-    });
+      // CORS blocking
+      /* this.http.get('https://nivite.jrvite.com/__/firebase/init.js', { responseType: 'text' as 'json' }).pipe(map((configjs: any) => {
+        const matched = configjs.match(this.matcher);
+        if (matched && matched[0]) {
+          const config = matched[0].replace(this.replacer, '"$2$3"$4');
+          this.clog.log('jrvite-config: ' + config);
+        }
+        return undefined;
+      })).subscribe((config: any) => {
+        if (config && config.appId) {
+          this.customerFirestore = new AngularFirestore(config, config.appId, false, null, PLATFORM_ID, this.ngZone, null);
+          this.customerFirestoreSub.next(this.customerFirestore);
+          this.setupAuth(config);
+        }
+        this.validateAndSetupInvite(preload);
+      }, (error) => {
+        console.log(error);
+        this.validateAndSetupInvite(preload);
+      }); */
+    }
   }
   setupAuth(config: any) {
     const preload = new Preloading('Initializing authentication library', true);
     this.preloadingSub.next(preload);
-    this.customerFireAuth = new AngularFireAuth(config, config.appId, PLATFORM_ID, this.ngZone);
+    if (this.premium) {
+      this.customerFireAuth = new AngularFireAuth(config, config.appId, PLATFORM_ID, this.ngZone);
+    } else {
+      this.niviteFireAuth = new AngularFireAuth(config, config.appId, PLATFORM_ID, this.ngZone);
+    }
     if (this.customerFireAuth) {
-      this.provider.addScope('profile');
-      this.provider.addScope('email');
       this.customerFireAuth.authState.subscribe((user: firebase.User) => {
         this.user = user;
         this.authLoaded = true;
@@ -71,9 +116,18 @@ export class UtilService {
         this.authLoaded = true;
         this.userSub.next(undefined);
       });
-      preload.show = false;
-      this.preloadingSub.next(preload);
+    } else if (this.niviteFireAuth) {
+      this.niviteFireAuth.authState.subscribe((user: firebase.User) => {
+        this.user = user;
+        this.authLoaded = true;
+        this.userSub.next(user);
+      }, (error) => {
+        this.authLoaded = true;
+        this.userSub.next(undefined);
+      });
     }
+    preload.show = false;
+    this.preloadingSub.next(preload);
   }
   setupInvite() {
     const preload = new Preloading('Loading invite details', true);
@@ -150,12 +204,19 @@ export class UtilService {
     return this.userSub.asObservable();
   }
   google(cb: () => void) {
-    this.customerFireAuth.auth.signInWithPopup(this.provider).then((uc: firebase.auth.UserCredential) => {
-      cb();
-    });
+    if (this.niviteFireAuth) {
+      this.niviteFireAuth.auth.signInWithPopup(this.provider).then((uc: firebase.auth.UserCredential) => {
+        cb();
+      });
+    } else if (this.customerFireAuth) {
+      this.customerFireAuth.auth.signInWithPopup(this.provider).then((uc: firebase.auth.UserCredential) => {
+        cb();
+      });
+    }
   }
   logout() {
-    this.customerFireAuth.auth.signOut();
+    if (this.niviteFireAuth) { this.niviteFireAuth.auth.signOut(); }
+    if (this.customerFireAuth) { this.customerFireAuth.auth.signOut(); }
   }
   toggleNav() {
     this.collapsed = !this.collapsed;
