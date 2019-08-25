@@ -65,13 +65,15 @@ export class NlibComponent implements OnInit, OnDestroy {
       }
     });
     title.setTitle('Nivite - Loading');
-    this.util.userSub.pipe(take(1)).subscribe((user: firebase.User) => {  // One time - invitalize firestore config
+    this.util.userSub.pipe(take(1)).subscribe((user: firebase.User) => {  // One time - initialize firestore config
       this.util.initializeFirestoreAndSetupInvite();
     });
-    this.util.guestSub.pipe(takeUntil(this.uns)).subscribe((guest: Guest) => { // On everytime guest is loaded
+    this.util.guestSub.pipe(takeUntil(this.uns)).subscribe((guest: Guest) => { // Everytime guest is loaded
       this.guest.emit(guest);
+      this.guestCurrent = guest;
+      this.resetRsvpForm();
     });
-    this.util.inviteSub.pipe(takeUntil(this.uns)).subscribe((invite: Invite) => { // On everytime invite is loaded
+    this.util.inviteSub.pipe(takeUntil(this.uns)).subscribe((invite: Invite) => { // Everytime invite is loaded
       this.invite.emit(invite);
       const cTitle = 'Nivite - ' + (invite ? invite.hostName : ' Oops!');
       const subdscr = invite ? invite.shortMsg : ' Oops!';
@@ -89,11 +91,11 @@ export class NlibComponent implements OnInit, OnDestroy {
         metaSubject.setAttribute('content', subdscr);
       }
     });
-    this.util.userSub.pipe(takeUntil(this.uns)).subscribe((user: firebase.User) => {  // On every login/logout
+    this.util.userSub.pipe(takeUntil(this.uns)).subscribe((user: firebase.User) => {  // Every login/logout
       this.util.setupGuest(user);
       this.login.emit(user);
     });
-    this.util.preloadingSub.pipe(takeUntil(this.uns)).subscribe((preloading: Preloading) => { // On loading animcation stop/start
+    this.util.preloadingSub.pipe(takeUntil(this.uns)).subscribe((preloading: Preloading) => { // Every preload animation stop/start
       this.preloads[preloading.id] = preloading;
       this.preloading.emit(preloading);
       if (preloading.show && preloading.timeout) {
@@ -121,11 +123,6 @@ export class NlibComponent implements OnInit, OnDestroy {
           this.hideAtcModal();
         }
       }
-    });
-    // RSVP
-    this.util.guestSub.pipe(takeUntil(this.uns)).subscribe((guest: Guest) => {
-      this.guestCurrent = guest;
-      this.resetRsvpForm();
     });
   }
   ngOnDestroy() {

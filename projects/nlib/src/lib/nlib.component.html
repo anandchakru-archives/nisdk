@@ -21,20 +21,20 @@
     <!-- header -->
     <nav class="slidedown navbar navbar-expand-md navbar-dark bg-dark fixed-top mb-5"
         [ngClass]="util.isHost()?'justify-content-between':''">
-        <a class="navbar-brand" href="//nivite.jrvite.com" (click)="util.toggleNav(); true" target="_blank"
-            rel="noopener noreferrer">Nivite
+        <a class="navbar-brand" href="//nivite.jrvite.com" (click)="util.toggleNav(); true">
+            <img src="//nivite.jrvite.com/assets/logo.png" width="30" height="30" class="d-inline-block align-top"
+                alt="Nivite Logo">
+            Nivite
         </a>
         <button class="navbar-toggler" type="button" (click)="util.toggleNav()" aria-label="Toggle navigation" #toggler>
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="navbar-collapse" [class.collapse]="util.collapsed">
             <div class="navbar-nav mr-auto">
-                <a class="nav-item nav-link" href="https://nivite.jrvite.com/ws/editor" (click)="util.toggleNav(); true"
-                    target="_blank" rel="noopener noreferrer">New invite</a>
-            </div>
-            <div class="navbar-nav mr-auto" *ngIf="util.user">
+                <a class="nav-item nav-link" href="https://nivite.jrvite.com/ws/editor"
+                    (click)="util.toggleNav(); true">New invite</a>
                 <a class="nav-item nav-link" href="https://nivite.jrvite.com/ws/invites/list"
-                    (click)="util.toggleNav(); true" target="_blank" rel="noopener noreferrer">My invites</a>
+                    (click)="util.toggleNav(); true">Invites</a>
             </div>
             <div class="navbar-nav">
                 <ng-container *ngIf="util.user; else noauth">

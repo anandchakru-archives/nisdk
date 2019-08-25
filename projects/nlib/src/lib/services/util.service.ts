@@ -129,7 +129,7 @@ export class UtilService {
             this.preloadingSub.next(preload);
           }, (error) => {
             this.growlSub.next(new Growl('ERROR: Preview mode'
-              , 'Could not load invite with iid=' + this.inviteId + '. Invalid iid?', 'danger'));
+              , 'Could not load guest with email=' + this.user.email + '. Please try after sometime', 'danger'));
             preload.show = false;
             this.preloadingSub.next(preload);
           });
