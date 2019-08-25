@@ -32,34 +32,10 @@ export class UtilService {
   preloadingSub: Subject<Preloading> = new Subject();
   growlMax = 5;
   growlSub = new ReplaySubject<Growl>(this.growlMax); // Max 5 growls
-  // Hard coding for now, because CORS blocked https://nivite.jrvite.com/__/firebase/init.js
-  // Find a way to do this:
-  // this.http.get('https://nivite.jrvite.com/__/firebase/init.js').subscribe((rsp) => {
-  //   this.niviteFireAuth = new AngularFireAuth(this.firebaseWebConfig, this.firebaseWebConfig.appId, PLATFORM_ID, this.ngZone);
-  // });
-  // niviteFirebaseWebConfig = {
-  //   apiKey: 'AIzaSyDUFUg-yCwu0GbvSf8DJ-17WlzcgnbZhzo',
-  //   appId: '1:212059574978:web:f955498611c402d9',
-  //   databaseURL: 'https://nivite-firebase.firebaseio.com',
-  //   storageBucket: 'nivite-firebase.appspot.com',
-  //   authDomain: 'nivite-firebase.firebaseapp.com',
-  //   messagingSenderId: '212059574978',
-  //   projectId: 'nivite-firebase'
-  // };
-  // niviteFireAuth: AngularFireAuth;
-  // this.setupAuth({
-  //   apiKey: 'AIzaSyDUFUg-yCwu0GbvSf8DJ-17WlzcgnbZhzo',
-  //   appId: '1:212059574978:web:f955498611c402d9',
-  //   databaseURL: 'https://nivite-firebase.firebaseio.com',
-  //   storageBucket: 'nivite-firebase.appspot.com',
-  //   authDomain: 'nivite-firebase.firebaseapp.com',
-  //   messagingSenderId: '212059574978',
-  //   projectId: 'nivite-firebase'
-  // });
+
   customerFireAuth: AngularFireAuth;
   customerFirestore: AngularFirestore;
   customerFirestoreSub: Subject<AngularFirestore> = new ReplaySubject(1);
-  // customerFireStorage: AngularFireStorage;
 
   constructor(private http: HttpClient, private ngZone: NgZone, private clog: ClogService) {
     const url = new URL(window.location.href).searchParams;
