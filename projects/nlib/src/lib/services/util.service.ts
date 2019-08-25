@@ -48,6 +48,7 @@ export class UtilService {
   };
   niviteFireAuth: AngularFireAuth;
   customerFirestore: AngularFirestore;
+  customerFirestoreSub: Subject<AngularFirestore> = new ReplaySubject(1);
   // customerFireStorage: AngularFireStorage;
 
   constructor(private http: HttpClient, private ngZone: NgZone, private clog: ClogService) {
@@ -78,6 +79,7 @@ export class UtilService {
     this.http.get('assets/fireconfig.json').subscribe((config: any) => {
       if (config && config.appId) {
         this.customerFirestore = new AngularFirestore(config, config.appId, false, null, PLATFORM_ID, this.ngZone, null);
+        this.customerFirestoreSub.next(this.customerFirestore);
       }
       this.validateAndSetupInvite(preload);
     }, (error) => {

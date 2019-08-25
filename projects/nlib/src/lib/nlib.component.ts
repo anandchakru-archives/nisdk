@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, OnDestroy, Input, Renderer2, ViewChild, ElementRef, HostListener, NgZone } from '@angular/core';
 import { UtilService } from './services/util.service';
 import { takeUntil, take, map } from 'rxjs/operators';
-import { Subject, interval, timer } from 'rxjs';
+import { Subject, interval, timer, forkJoin } from 'rxjs';
 import { Invite, Guest, Growl, ModalMsg, Preloading } from './util/nlib-model';
 import { Title } from '@angular/platform-browser';
 import { ClogService } from './services/clog.service';
@@ -91,8 +91,14 @@ export class NlibComponent implements OnInit, OnDestroy {
         metaSubject.setAttribute('content', subdscr);
       }
     });
+    forkJoin(this.util.customerFirestoreSub, this.util.userSub).pipe(takeUntil(this.uns)).subscribe((joined: any[]) => {
+      const customerFirestore = joined[0];
+      const user = joined[1];
+      if (customerFirestore && user) {
+        this.util.setupGuest(user);
+      }
+    });
     this.util.userSub.pipe(takeUntil(this.uns)).subscribe((user: firebase.User) => {  // Every login/logout
-      this.util.setupGuest(user);
       this.login.emit(user);
     });
     this.util.preloadingSub.pipe(takeUntil(this.uns)).subscribe((preloading: Preloading) => { // Every preload animation stop/start
