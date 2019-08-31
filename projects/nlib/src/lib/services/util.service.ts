@@ -78,25 +78,6 @@ export class UtilService {
       this.customerFirestoreSub.next(this.customerFirestore);
       this.setupAuth(config);
       this.validateAndSetupInvite(preload);
-      // CORS blocking
-      /* this.http.get('https://nivite.jrvite.com/__/firebase/init.js', { responseType: 'text' as 'json' }).pipe(map((configjs: any) => {
-        const matched = configjs.match(this.matcher);
-        if (matched && matched[0]) {
-          const config = matched[0].replace(this.replacer, '"$2$3"$4');
-          this.clog.log('jrvite-config: ' + config);
-        }
-        return undefined;
-      })).subscribe((config: any) => {
-        if (config && config.appId) {
-          this.customerFirestore = new AngularFirestore(config, config.appId, false, null, PLATFORM_ID, this.ngZone, null);
-          this.customerFirestoreSub.next(this.customerFirestore);
-          this.setupAuth(config);
-        }
-        this.validateAndSetupInvite(preload);
-      }, (error) => {
-        console.log(error);
-        this.validateAndSetupInvite(preload);
-      }); */
     }
   }
   setupAuth(config: any) {
@@ -279,7 +260,9 @@ export class UtilService {
     };
     this.invite.timeFromString = this.ifMomentString(this.invite.timeFrom);
     this.invite.timeToString = this.ifMomentString(this.invite.timeTo);
-    this.inviteSub.next(this.invite);
+    setTimeout(() => {
+      this.inviteSub.next(this.invite);
+    }, 1);
   }
   sampleGuest() {
     this.guest = {
@@ -294,7 +277,9 @@ export class UtilService {
       , hostApproved: true
       , notifyUpdates: true
     };
-    this.guestSub.next(this.guest);
+    setTimeout(() => {
+      this.guestSub.next(this.guest);
+    }, 1);
   }
   makeNewGuest(): Guest {
     return {
