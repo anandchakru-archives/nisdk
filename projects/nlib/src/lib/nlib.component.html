@@ -13,6 +13,59 @@
 
 
 
+<!--S:INVITE-->
+<div #ref>
+  <ng-content></ng-content>
+</div>
+<ng-container *ngIf="!ngContent">
+  <nlib-r-default></nlib-r-default>
+</ng-container>
+<!-- <div id="invite-wrap" *ngIf="currentInvite">
+  <section id="guest" *ngIf="currentGuest">
+    <div>{{currentGuest.name}}</div>
+  </section>
+  <section id="bg" *ngIf="currentBg">
+    <div [style.background]="'url(' + currentBg.img + ')'"></div>
+  </section>
+  <section id="main">
+    <div id="title">{{currentInvite.title}}</div>
+    <div id="shortMsg">{{currentInvite.shortMsg}}</div>
+    <div id="img-main" *ngIf="currentMain">
+      <img [src]="currentMain.url" [alt]="currentMain.description">
+      <div id="main-details">
+        <span>{{currentMain.title}}</span>
+        <span>{{currentMain.description}}</span>
+      </div>
+    </div>
+    <div id="longMsg">{{currentInvite.longMsg}}</div>
+  </section>
+  <section id="slider" *ngIf="slider && slider.length">
+    <div *ngFor="let slide of slider; let i=index">
+      <img [src]="slide.url" [alt]="slide.description">
+      <div id="main-details">
+        <span>{{slide.title}}</span>
+        <span>{{slide.description}}</span>
+      </div>
+    </div>
+  </section>
+  <section id="details">
+    <div id="addr">
+      <h3 id="addrTitle">Venue</h3>
+      <div id="addrText">{{currentInvite.addrText}}</div>
+    </div>
+    <div id="timeFrom">
+      <h3 id="timeFromTitle">Starts</h3>
+      <div id="timeFrom">{{currentInvite.timeFrom}}</div>
+    </div>
+    <div id="timeTo">
+      <h3 id="timeToTitle">Ends</h3>
+      <div id="timeTo">{{currentInvite.timeTo}}</div>
+    </div>
+  </section>
+</div> -->
+<!--E:INVITE-->
+
+
 
 
 
@@ -134,9 +187,6 @@
             <small class="form-text text-muted">Optional message to the host. Markdown enabled. <a
                 href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank"
                 rel="noopener noreferrer">help</a></small>
-          </div>
-          <div class="btn-group d-flex">
-
           </div>
           <small *ngIf="getUnApproved()" class="form-text text-muted">* Host has not accepted.</small>
         </div>

@@ -1,0 +1,9 @@
+<div #ref>
+  <ng-content></ng-content>
+</div>
+<ng-container *ngIf="!ngContent">
+  <div class="r-time">
+    <nlib-r-details-time-from></nlib-r-details-time-from>
+    <nlib-r-details-time-to></nlib-r-details-time-to>
+  </div>
+</ng-container>

@@ -1,40 +1,44 @@
-import { Component, OnInit, Output, EventEmitter, OnDestroy, Input, Renderer2, ViewChild, ElementRef, HostListener, NgZone } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy, Renderer2, ViewChild, ElementRef, HostListener, NgZone, ContentChild, AfterViewInit } from '@angular/core';
 import { UtilService } from './services/util.service';
 import { takeUntil, take, map } from 'rxjs/operators';
 import { Subject, interval, timer, forkJoin } from 'rxjs';
-import { Invite, Guest, Growl, ModalMsg, Preloading } from './util/nlib-model';
+import { Invite, Guest, Growl, ModalMsg, Preloading, InvitePhoto } from './util/nlib-model';
 import { Title } from '@angular/platform-browser';
 import { ClogService } from './services/clog.service';
 import { AtcService } from './services/atc.service';
 import { KeyValue } from '@angular/common';
 import { BUILDINFO } from './buildinfo';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { RService } from './services/r.service';
 
 @Component({
   selector: 'nlib-nivite',
   templateUrl: './nlib.component.html',
   styleUrls: ['./nlib.component.scss']
 })
-export class NlibComponent implements OnInit, OnDestroy {
+export class NlibComponent implements OnInit, OnDestroy, AfterViewInit {
   preloads: { [key: string]: Preloading } = {};
   private uns = new Subject();
   @Output() invite = new EventEmitter<Invite>();
   @Output() login = new EventEmitter<firebase.User>();
   @Output() guest = new EventEmitter<Guest>();
   @Output() preloading = new EventEmitter<Preloading>();
-  //ATC
+  // Rendering
+  @ViewChild('ref', { static: true }) ref: ElementRef;
+  ngContent = false;
+  // ATC
   @ViewChild('atcModal', { static: false }) atcModal: ElementRef;
-  //GROWLS
+  // GROWLS
   growls: { [id: string]: Growl } = {};
-  //NAV
+  // NAV
   buildinfo = BUILDINFO;
   // RSVP
   @ViewChild('rsvpModal', { static: false }) rsvpModal: ElementRef;
   savingrsvp: boolean;
   fg: FormGroup;
-  guestCurrent: Guest;
-  constructor(public atc: AtcService, private fb: FormBuilder, public util: UtilService, private title: Title
-    , public clog: ClogService, private renderer: Renderer2, private zone: NgZone) {
+  currentGuest: Guest;
+
+  constructor(public atc: AtcService, private r: RService, private fb: FormBuilder, public util: UtilService, private title: Title, public clog: ClogService, private renderer: Renderer2, private zone: NgZone) {
     // GROWL
     this.util.growlSub.pipe(takeUntil(this.uns)).subscribe((growl: Growl) => {
       const gid = this.rnd();
@@ -68,10 +72,13 @@ export class NlibComponent implements OnInit, OnDestroy {
     this.util.initializeFirestoreAndSetupInvite();
     this.util.guestSub.pipe(takeUntil(this.uns)).subscribe((guest: Guest) => { // Everytime guest is loaded
       this.guest.emit(guest);
-      this.guestCurrent = guest;
+      this.currentGuest = guest;
+      this.r.guest = guest;
       this.resetRsvpForm();
     });
     this.util.inviteSub.pipe(takeUntil(this.uns)).subscribe((invite: Invite) => { // Everytime invite is loaded
+      this.r.invite = invite;
+      this.r.sortImages();
       this.invite.emit(invite);
       const cTitle = 'Nivite - ' + (invite ? invite.hostName : ' Oops!');
       const subdscr = invite ? invite.shortMsg : ' Oops!';
@@ -110,6 +117,14 @@ export class NlibComponent implements OnInit, OnDestroy {
     this.resetRsvpForm();
   }
 
+  go(): boolean {
+    return this.ref.nativeElement.childNodes.length === 0;
+  }
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.ngContent = this.ref.nativeElement.childNodes.length > 0;
+    }, 1);
+  }
   ngOnInit() {
     // If you are changing the margin values - dont forget .growls {top: 70px;}
     this.renderer.setStyle(document.body, 'margin-top', '60px');
@@ -186,9 +201,9 @@ export class NlibComponent implements OnInit, OnDestroy {
   // RSVP
   resetRsvpForm() {
     this.fg = this.fb.group({
-      ac: this.guestCurrent ? this.guestCurrent.adultCount : 0,
-      kc: this.guestCurrent ? this.guestCurrent.kidCount : 0,
-      longMsg: this.guestCurrent ? this.guestCurrent.longMsg : ''
+      ac: this.currentGuest ? this.currentGuest.adultCount : 0,
+      kc: this.currentGuest ? this.currentGuest.kidCount : 0,
+      longMsg: this.currentGuest ? this.currentGuest.longMsg : ''
     });
   }
   saveRsvp(rsvp: 'Y' | 'N' | 'M') {
@@ -238,4 +253,5 @@ export class NlibComponent implements OnInit, OnDestroy {
     }
     return '*';
   }
+
 }

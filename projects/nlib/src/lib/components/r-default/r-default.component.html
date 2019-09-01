@@ -1,0 +1,20 @@
+<div #ref>
+  <ng-content></ng-content>
+</div>
+<ng-container *ngIf="!ngContent">
+  <div class="r-default">
+    <nlib-r-bg></nlib-r-bg>
+    <section class="guest">
+      <nlib-r-guest></nlib-r-guest>
+    </section>
+    <section class="main">
+      <nlib-r-main></nlib-r-main>
+    </section>
+    <section class="details">
+      <nlib-r-details></nlib-r-details>
+    </section>
+    <section class="slider">
+      <nlib-r-slider></nlib-r-slider>
+    </section>
+  </div>
+</ng-container>

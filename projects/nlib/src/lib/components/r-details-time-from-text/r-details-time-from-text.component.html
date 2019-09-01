@@ -1,0 +1,8 @@
+<div #ref>
+  <ng-content></ng-content>
+</div>
+<ng-container *ngIf="!ngContent">
+  <span class="r-time-from-text">
+    {{r.invite.timeFrom}}
+  </span>
+</ng-container>

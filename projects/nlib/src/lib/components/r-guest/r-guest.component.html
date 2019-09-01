@@ -1,0 +1,8 @@
+<div #ref>
+  <ng-content></ng-content>
+</div>
+<ng-container *ngIf="!ngContent">
+  <span class="r-guest">
+    {{r.guest?.name}}
+  </span>
+</ng-container>

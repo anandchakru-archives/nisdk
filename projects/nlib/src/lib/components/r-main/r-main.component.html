@@ -1,0 +1,11 @@
+<div #ref>
+  <ng-content></ng-content>
+</div>
+<ng-container *ngIf="!ngContent">
+  <div class="r-main">
+    <nlib-r-main-title></nlib-r-main-title>
+    <nlib-r-main-short-msg></nlib-r-main-short-msg>
+    <nlib-r-main-img></nlib-r-main-img>
+    <nlib-r-main-long-msg></nlib-r-main-long-msg>
+  </div>
+</ng-container>

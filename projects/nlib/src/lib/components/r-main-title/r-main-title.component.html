@@ -1,0 +1,8 @@
+<div #ref>
+  <ng-content></ng-content>
+</div>
+<ng-container *ngIf="!ngContent">
+  <span class="r-main-title">
+    {{r.invite.title}}
+  </span>
+</ng-container>

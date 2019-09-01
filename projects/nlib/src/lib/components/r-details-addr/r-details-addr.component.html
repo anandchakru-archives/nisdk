@@ -1,0 +1,9 @@
+<div #ref>
+  <ng-content></ng-content>
+</div>
+<ng-container *ngIf="!ngContent">
+  <div class="r-address">
+    <nlib-r-details-addr-title></nlib-r-details-addr-title>
+    <nlib-r-details-addr-text></nlib-r-details-addr-text>
+  </div>
+</ng-container>

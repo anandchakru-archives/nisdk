@@ -252,6 +252,11 @@ export class UtilService {
         , tags: ['meat', 'cook', 'bbq', 'slider']
         , title: 'Barbeque'
       }, {
+        url: 'https://firebasestorage.googleapis.com/v0/b/nivite-firebase.appspot.com/o/nivites%2Fv95pHx8BYFa3lP3tXF3mhB4KIou1%2FC1DD3D98-04A0-4F24-B869-4DD2B91E223C.jpeg?alt=media&token=c9b4883d-c9d0-4a45-9b65-886e3348ff46',
+        description: 'The main family picture',
+        tags: ['main'],
+        title: 'Family picture'
+      }, {
         url: 'assets/demobg.jpg',
         description: 'Demo background',
         tags: ['bg', 'background'],

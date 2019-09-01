@@ -141,6 +141,28 @@ ng add @angular/elements --project=nelem
 ng g service services/util --project=nlib
 ng g service services/clog --project=nlib
 ng g service services/atc --project=nlib
+ng g service services/r --project=nlib
+
+ng g component components/r-default --project=nlib
+ng g component components/r-guest --project=nlib
+ng g component components/r-bg --project=nlib
+ng g component components/r-main --project=nlib
+ng g component components/r-main-title --project=nlib
+ng g component components/r-main-short-msg --project=nlib
+ng g component components/r-main-img --project=nlib
+ng g component components/r-main-long-msg --project=nlib
+ng g component components/r-slider --project=nlib
+ng g component components/r-details --project=nlib
+ng g component components/r-details-addr --project=nlib
+ng g component components/r-details-addr-title --project=nlib
+ng g component components/r-details-addr-text --project=nlib
+ng g component components/r-details-time --project=nlib
+ng g component components/r-details-time-from --project=nlib
+ng g component components/r-details-time-from-title --project=nlib
+ng g component components/r-details-time-from-text --project=nlib
+ng g component components/r-details-time-to --project=nlib
+ng g component components/r-details-time-to-title --project=nlib
+ng g component components/r-details-time-to-text --project=nlib
 
 #rename nlib to @nivite/nlib in ./projects/nlib/package.json
 

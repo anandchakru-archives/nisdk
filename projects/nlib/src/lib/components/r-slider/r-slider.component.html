@@ -1,0 +1,14 @@
+<div #ref>
+  <ng-content></ng-content>
+</div>
+<ng-container *ngIf="!ngContent">
+  <div class="r-slider">
+    <div class="r-slide" *ngFor="let slide of r.slider; let i=index">
+      <img class="r-slide-img" [src]="slide.url" [alt]="slide.description">
+      <div class="r-slide-details">
+        <span class="r-slide-details-title">{{slide.title}}</span>
+        <span class="r-slide-details-description">{{slide.description}}</span>
+      </div>
+    </div>
+  </div>
+</ng-container>

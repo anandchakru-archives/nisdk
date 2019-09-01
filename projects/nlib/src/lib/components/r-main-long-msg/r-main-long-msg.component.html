@@ -1,0 +1,8 @@
+<div #ref>
+  <ng-content></ng-content>
+</div>
+<ng-container *ngIf="!ngContent">
+  <span class="r-main-long-msg">
+    {{r.invite.longMsg}}
+  </span>
+</ng-container>

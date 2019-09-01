@@ -1,0 +1,12 @@
+<div #ref>
+  <ng-content></ng-content>
+</div>
+<ng-container *ngIf="!ngContent">
+  <div class="r-main-img-wrap" *ngIf="r.mainPhoto && r.mainPhoto.url">
+    <img class="r-main-img" [src]="r.mainPhoto.url" [alt]="r.mainPhoto.description">
+    <div class="r-main-img-details">
+      <span class="r-main-img-title">{{r.mainPhoto.title}}</span>
+      <span class="r-main-img-description">{{r.mainPhoto.description}}</span>
+    </div>
+  </div>
+</ng-container>
