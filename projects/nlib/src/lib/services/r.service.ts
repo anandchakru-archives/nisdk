@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Invite, InvitePhoto } from '../util/nlib-model';
-import { Guest } from 'nlib/lib/util/nlib-model';
+import { Invite, InvitePhoto, Guest } from '../util/nlib-model';
 
 @Injectable({
   providedIn: 'root'
