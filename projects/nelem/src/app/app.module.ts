@@ -42,7 +42,27 @@ declare global {
   ],
   providers: [],
   bootstrap: [],
-  entryComponents: [AppComponent]
+  entryComponents: [AppComponent,
+    RDefaultComponent,
+    RGuestComponent,
+    RBgComponent,
+    RMainComponent,
+    RMainTitleComponent,
+    RMainShortMsgComponent,
+    RMainImgComponent,
+    RMainLongMsgComponent,
+    RSliderComponent,
+    RDetailsComponent,
+    RDetailsAddrComponent,
+    RDetailsAddrTitleComponent,
+    RDetailsAddrTextComponent,
+    RDetailsTimeFromComponent,
+    RDetailsTimeFromTitleComponent,
+    RDetailsTimeFromTextComponent,
+    RDetailsTimeToComponent,
+    RDetailsTimeToTitleComponent,
+    RDetailsTimeToTextComponent,
+    RDetailsTimeComponent]
 })
 export class AppModule {
   constructor(private injector: Injector) { }
