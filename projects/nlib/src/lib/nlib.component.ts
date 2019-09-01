@@ -39,6 +39,20 @@ export class NlibComponent implements OnInit, OnDestroy, AfterViewInit {
   currentGuest: Guest;
 
   constructor(public atc: AtcService, private r: RService, private fb: FormBuilder, public util: UtilService, private title: Title, public clog: ClogService, private renderer: Renderer2, private zone: NgZone) {
+    // PRELOADS
+    this.util.preloadingSub.pipe(takeUntil(this.uns)).subscribe((preloading: Preloading) => { // Every preload animation stop/start
+      this.preloads[preloading.id] = preloading;
+      this.preloading.emit(preloading);
+      if (preloading.show && preloading.timeout) {
+        setTimeout(() => {
+          delete this.preloads[preloading.id];
+          this.preloading.emit(preloading);
+        }, preloading.timeout);
+      } else {
+        delete this.preloads[preloading.id];
+        this.preloading.emit(preloading);
+      }
+    });
     // GROWL
     this.util.growlSub.pipe(takeUntil(this.uns)).subscribe((growl: Growl) => {
       const gid = this.rnd();
@@ -95,31 +109,43 @@ export class NlibComponent implements OnInit, OnDestroy, AfterViewInit {
       if (metaSubject) {
         metaSubject.setAttribute('content', subdscr);
       }
+      this.loadDesignTemplate(invite);
       this.util.setupGuest(this.util.user); // Everytime Invite loads, refresh guest
     });
     this.util.userSub.pipe(takeUntil(this.uns)).subscribe((user: firebase.User) => {  // Every login/logout
       this.util.setupGuest(user);
       this.login.emit(user);
     });
-    this.util.preloadingSub.pipe(takeUntil(this.uns)).subscribe((preloading: Preloading) => { // Every preload animation stop/start
-      this.preloads[preloading.id] = preloading;
-      this.preloading.emit(preloading);
-      if (preloading.show && preloading.timeout) {
-        setTimeout(() => {
-          delete this.preloads[preloading.id];
-          this.preloading.emit(preloading);
-        }, preloading.timeout);
-      } else {
-        delete this.preloads[preloading.id];
-        this.preloading.emit(preloading);
-      }
-    });
     this.resetRsvpForm();
   }
 
-  go(): boolean {
-    return this.ref.nativeElement.childNodes.length === 0;
+  private loadDesignTemplate(invite: Invite) {
+    const preload = new Preloading('Loading Design Template', true);
+    this.util.preloadingSub.next(preload);
+    const head = document.getElementsByTagName('head')[0];
+    if (invite.styles) {
+      invite.styles.forEach(style => {
+        const fileref = document.createElement('link');
+        fileref.setAttribute('rel', 'stylesheet');
+        fileref.setAttribute('type', 'text/css');
+        fileref.setAttribute('href', style);
+        head.appendChild(fileref);
+      });
+    }
+    if (invite.scripts) {
+      invite.scripts.forEach(script => {
+        const fileref = document.createElement('script');
+        fileref.setAttribute('type', 'text/javascript');
+        fileref.setAttribute('src', script);
+        head.appendChild(fileref);
+      });
+    }
+    setTimeout(() => {
+      preload.show = false;
+      this.util.preloadingSub.next(preload);
+    }, 500);
   }
+
   ngAfterViewInit() {
     setTimeout(() => {
       this.ngContent = this.ref.nativeElement.childNodes.length > 0;

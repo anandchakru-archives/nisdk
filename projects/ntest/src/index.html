@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>Ntest</title>
@@ -7,8 +8,86 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!--S:Loading-->
+  <style>
+    .preload {
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #444;
+      border-radius: 5px;
+    }
+
+    .load-bar {
+      position: relative;
+      margin-top: 20px;
+      width: 100%;
+      height: 6px;
+      background-color: #fdba2c;
+    }
+
+    .bar {
+      content: "";
+      display: inline;
+      position: absolute;
+      height: 100%;
+      left: 50%;
+      text-align: center;
+    }
+
+    .bar:nth-child(1) {
+      background-color: #da4733;
+      animation: loading 4s linear infinite;
+    }
+
+    .bar:nth-child(2) {
+      background-color: #3b78e7;
+      animation: loading 4s linear 1s infinite;
+    }
+
+    .bar:nth-child(3) {
+      background-color: #fdba2c;
+      animation: loading 4s linear 2s infinite;
+    }
+
+    .bar:nth-child(4) {
+      background-color: #3e8737;
+      animation: loading 4s linear 3s infinite;
+    }
+
+    @keyframes loading {
+      from {
+        left: 50%;
+        width: 0;
+        z-index: 100;
+      }
+
+      25% {
+        left: 0;
+        width: 100%;
+        z-index: 10;
+      }
+
+      to {
+        left: 0;
+        width: 100%;
+      }
+    }
+  </style>
+  <!--E:Loading-->
 </head>
+
 <body>
-  <ntest-root></ntest-root>
+  <ntest-root>
+    <div class="preload">
+      <div class="load-bar">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+    </div>
+  </ntest-root>
 </body>
+
 </html>

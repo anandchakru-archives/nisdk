@@ -46,6 +46,8 @@ export interface Invite {
   visibleByLink?: boolean;      // Yes -  (default) free version, No  - paid version
   photos?: InvitePhoto[];
   guests?: Guest[];
+  styles?: string[];            // array of external style css
+  scripts?: string[];           // array of external javascripts
   /* _dateFrom?: Date;
   _dateTo?: Date;
   _timeFrom?: Date;

@@ -241,18 +241,20 @@ export class UtilService {
       , showGuests: true
       , autoApproveNewRsvp: true
       , visibleByLink: true
+      , styles: ['assets/demostyle.css']
+      , scripts: ['assets/demoscript.js']
       , photos: [{
-        url: 'https://images.pexels.com/photos/1702373/pexels-photo-1702373.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
+        url: 'assets/demoslider1.jpg'
         , description: '3 layer cake'
         , tags: ['cake', 'food', 'slider']
         , title: 'Birthday cake'
       }, {
-        url: 'https://images.pexels.com/photos/1105325/bbq-meet-eating-diner-1105325.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
+        url: 'assets/demoslider2.jpg'
         , description: 'Barbeque grill'
         , tags: ['meat', 'cook', 'bbq', 'slider']
         , title: 'Barbeque'
       }, {
-        url: 'https://firebasestorage.googleapis.com/v0/b/nivite-firebase.appspot.com/o/nivites%2Fv95pHx8BYFa3lP3tXF3mhB4KIou1%2FC1DD3D98-04A0-4F24-B869-4DD2B91E223C.jpeg?alt=media&token=c9b4883d-c9d0-4a45-9b65-886e3348ff46',
+        url: 'assets/demomain.jpg',
         description: 'The main family picture',
         tags: ['main'],
         title: 'Family picture'

@@ -7,17 +7,16 @@ import { Preloading } from '../util/nlib-model';
   providedIn: 'root'
 })
 export class RService {
-  invite: Invite = { title: 'loading', shortMsg: 'loading' };
+  invite: Invite;
   guest: Guest = {};
   bgPhoto: InvitePhoto;
   mainPhoto: InvitePhoto;
   slider: InvitePhoto[] = [];
   preload = new Preloading('Initializing renderer', true);
-  constructor(private util: UtilService) {
-    this.util.preloadingSub.next(this.preload);
-  }
+  constructor(private util: UtilService) { }
 
   sortImages() {
+    this.util.preloadingSub.next(this.preload);
     this.invite.photos.forEach(photo => {
       if (photo.tags && photo.tags.length) {
         photo.tags.forEach((tag: string) => {
@@ -35,7 +34,6 @@ export class RService {
       }
     });
     setTimeout(() => {
-      this.preload.show = false;
       this.util.preloadingSub.next(this.preload);
     }, 500);
   }

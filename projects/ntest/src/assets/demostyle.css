@@ -1,0 +1,15 @@
+nlib-r-default {
+  font-family: "Nunito", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+nlib-r-default img {
+  width: 100%;
+}
+
+nlib-r-default .r-guest {
+  font-size: 1rem;
+}
+
+.r-main-title {
+  font-size: 3rem;
+}

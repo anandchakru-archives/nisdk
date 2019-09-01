@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Roboto);
+@import url(https://fonts.googleapis.com/css?family=Roboto|Nunito);
 @import "../variables";
 @import "~bootstrap/scss/bootstrap.scss";
 @import "../bootswatch";
@@ -142,7 +142,7 @@ $height: 15px;
 $bounce_height: 30px;
 
 .n3preload {
-  &::before {
+  &::after {
     content: '';
     position: fixed;
     top: 0;
@@ -150,14 +150,15 @@ $bounce_height: 30px;
     left: 0;
     right: 0;
     animation: bg 2s ease infinite;
-    background: linear-gradient(270deg, #cc7d83, #f8e5e7);
+    background: linear-gradient(270deg, #444, #888);
     background-size: 400% 400%;
-    z-index: 3;
-    opacity: 0.8;
+    z-index: 1019;
+    opacity: 0.95;
   }
 }
 
 .n3preloadwrap {
+  z-index: 1020;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -165,10 +166,11 @@ $bounce_height: 30px;
 }
 
 .n3preloadtext {
-  color: #cc7d83;
+  color: #ccc;
   display: inline-block;
   margin-left: 5px;
-  font-family: "Montserrat", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 3rem;
+  font-family: "Nunito", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .n3preloadbounceball {
@@ -185,7 +187,7 @@ $bounce_height: 30px;
     width: $width;
     height: $height;
     border-radius: 50%;
-    background-color: #cc7d83;
+    background-color: #444;
     transform-origin: 50%;
     animation: bounce 500ms alternate infinite ease;
   }
