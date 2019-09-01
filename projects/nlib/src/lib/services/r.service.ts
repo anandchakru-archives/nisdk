@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Invite, InvitePhoto, Guest } from '../util/nlib-model';
+import { UtilService } from './util.service';
+import { Preloading } from '../util/nlib-model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,22 +12,32 @@ export class RService {
   bgPhoto: InvitePhoto;
   mainPhoto: InvitePhoto;
   slider: InvitePhoto[] = [];
-  constructor() { }
+  preload = new Preloading('Initializing renderer', true);
+  constructor(private util: UtilService) {
+    this.util.preloadingSub.next(this.preload);
+  }
 
   sortImages() {
     this.invite.photos.forEach(photo => {
       if (photo.tags && photo.tags.length) {
         photo.tags.forEach((tag: string) => {
-          if (tag && ('bg' === tag.toLowerCase() || 'background' === tag.toLowerCase())) {
-            this.bgPhoto = photo;
-          } else if (tag && 'main' === tag.toLowerCase()) {
-            this.mainPhoto = photo;
-          } else if (tag && tag.toLowerCase().indexOf('slider') >= 0) {
-            this.slider.push(photo);
+          if (tag) {
+            const ttag = tag.trim();
+            if ((ttag.toLowerCase() === 'bg' || ttag.toLowerCase() === 'background')) {
+              this.bgPhoto = photo;
+            } else if (ttag.toLowerCase() === 'main') {
+              this.mainPhoto = photo;
+            } else if (ttag.toLowerCase().indexOf('slider') >= 0) {
+              this.slider.push(photo);
+            }
           }
         });
       }
     });
+    setTimeout(() => {
+      this.preload.show = false;
+      this.util.preloadingSub.next(this.preload);
+    }, 500);
   }
 
 }
