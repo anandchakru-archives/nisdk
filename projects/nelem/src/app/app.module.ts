@@ -34,26 +34,7 @@ declare global {
 
 @NgModule({
   declarations: [
-    AppComponent, RDefaultComponent,
-    RGuestComponent,
-    RBgComponent,
-    RMainComponent,
-    RMainTitleComponent,
-    RMainShortMsgComponent,
-    RMainImgComponent,
-    RMainLongMsgComponent,
-    RSliderComponent,
-    RDetailsComponent,
-    RDetailsAddrComponent,
-    RDetailsAddrTitleComponent,
-    RDetailsAddrTextComponent,
-    RDetailsTimeFromComponent,
-    RDetailsTimeFromTitleComponent,
-    RDetailsTimeFromTextComponent,
-    RDetailsTimeToComponent,
-    RDetailsTimeToTitleComponent,
-    RDetailsTimeToTextComponent,
-    RDetailsTimeComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -128,9 +109,6 @@ export class AppModule {
     }
     if (!customElements.get('nelem-r-slider')) {
       customElements.define('nelem-r-slider', createCustomElement(RSliderComponent, { injector: this.injector }));
-    }
-    if (!customElements.get('nelem-r-default')) {
-      customElements.define('nelem-r-default', createCustomElement(RDefaultComponent, { injector: this.injector }));
     }
   }
 }
